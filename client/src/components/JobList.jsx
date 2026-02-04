@@ -1,3 +1,53 @@
+import { useState } from 'react';
+import { jobAPI } from '../api';
+
+// Embedding status badge component
+const EmbeddingBadge = ({ status, onGenerate, isGenerating }) => {
+    const statusConfig = {
+        ready: {
+            color: 'bg-green-500/20 text-green-400 border-green-500/30',
+            icon: '🧠',
+            label: 'AI Ready'
+        },
+        processing: {
+            color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+            icon: '⏳',
+            label: 'Processing...'
+        },
+        pending: {
+            color: 'bg-slate-500/20 text-slate-400 border-slate-500/30',
+            icon: '○',
+            label: 'Pending'
+        },
+        failed: {
+            color: 'bg-red-500/20 text-red-400 border-red-500/30',
+            icon: '⚠️',
+            label: 'Failed'
+        }
+    };
+
+    const config = statusConfig[status] || statusConfig.pending;
+
+    return (
+        <div className="flex items-center gap-2">
+            <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs rounded border ${config.color}`}>
+                <span>{config.icon}</span>
+                <span>{config.label}</span>
+            </span>
+            {(status === 'pending' || status === 'failed') && (
+                <button
+                    onClick={onGenerate}
+                    disabled={isGenerating}
+                    className="text-xs px-2 py-1 bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 
+                             rounded border border-purple-500/30 transition disabled:opacity-50"
+                >
+                    {isGenerating ? '...' : '🔄 Generate'}
+                </button>
+            )}
+        </div>
+    );
+};
+
 // Skill tag component for displaying extracted skills
 const SkillTag = ({ skill, variant = 'default' }) => {
     const categoryColors = {
@@ -25,7 +75,29 @@ const SkillTag = ({ skill, variant = 'default' }) => {
     );
 };
 
-const JobList = ({ jobs, onDelete }) => {
+const JobList = ({ jobs, onDelete, onRefresh }) => {
+    const [generatingIds, setGeneratingIds] = useState(new Set());
+
+    const handleGenerateEmbedding = async (jobId) => {
+        setGeneratingIds(prev => new Set([...prev, jobId]));
+
+        try {
+            await jobAPI.generateEmbedding(jobId);
+            // Refresh the jobs list to show updated status
+            if (onRefresh) {
+                onRefresh();
+            }
+        } catch (error) {
+            console.error('Failed to generate embedding:', error);
+        } finally {
+            setGeneratingIds(prev => {
+                const next = new Set(prev);
+                next.delete(jobId);
+                return next;
+            });
+        }
+    };
+
     if (jobs.length === 0) {
         return (
             <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700 rounded-2xl p-8 text-center">
@@ -50,7 +122,14 @@ const JobList = ({ jobs, onDelete }) => {
                     >
                         <div className="flex items-start justify-between">
                             <div className="flex-1 min-w-0">
-                                <h4 className="text-white font-medium truncate">{job.title}</h4>
+                                <div className="flex items-center gap-3 flex-wrap">
+                                    <h4 className="text-white font-medium truncate">{job.title}</h4>
+                                    <EmbeddingBadge
+                                        status={job.embeddingStatus}
+                                        onGenerate={() => handleGenerateEmbedding(job.id)}
+                                        isGenerating={generatingIds.has(job.id)}
+                                    />
+                                </div>
 
                                 {/* Experience requirement */}
                                 {job.profile?.totalYearsRequired > 0 && (

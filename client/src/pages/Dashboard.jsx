@@ -66,6 +66,15 @@ const Dashboard = () => {
         }
     };
 
+    const refreshJobs = async () => {
+        try {
+            const jobRes = await jobAPI.getAll();
+            setJobs(jobRes.data);
+        } catch (error) {
+            console.error('Error refreshing jobs:', error);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
             {/* Header */}
@@ -97,8 +106,8 @@ const Dashboard = () => {
                     <button
                         onClick={() => setActiveTab('resumes')}
                         className={`px-6 py-3 rounded-lg font-medium transition-all ${activeTab === 'resumes'
-                                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25'
-                                : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                            ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25'
+                            : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
                             }`}
                     >
                         📄 Resumes ({resumes.length})
@@ -106,8 +115,8 @@ const Dashboard = () => {
                     <button
                         onClick={() => setActiveTab('jobs')}
                         className={`px-6 py-3 rounded-lg font-medium transition-all ${activeTab === 'jobs'
-                                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25'
-                                : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                            ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25'
+                            : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
                             }`}
                     >
                         💼 Jobs ({jobs.length})
@@ -136,7 +145,7 @@ const Dashboard = () => {
                                     <JobForm onSubmit={handleJobCreate} />
                                 </div>
                                 <div className="lg:col-span-2">
-                                    <JobList jobs={jobs} onDelete={handleJobDelete} />
+                                    <JobList jobs={jobs} onDelete={handleJobDelete} onRefresh={refreshJobs} />
                                 </div>
                             </>
                         )}

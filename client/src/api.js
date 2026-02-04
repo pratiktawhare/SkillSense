@@ -40,7 +40,11 @@ export const jobAPI = {
     create: (data) => api.post('/jobs', data),
     getAll: () => api.get('/jobs'),
     getOne: (id) => api.get(`/jobs/${id}`),
-    delete: (id) => api.delete(`/jobs/${id}`)
+    delete: (id) => api.delete(`/jobs/${id}`),
+    // Embedding endpoints
+    generateEmbedding: (id) => api.post(`/jobs/${id}/embed`),
+    getEmbeddingStatus: (id) => api.get(`/jobs/${id}/embedding-status`),
+    batchEmbed: () => api.post('/jobs/batch-embed')
 };
 
 export default api;

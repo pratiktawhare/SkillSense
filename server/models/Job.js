@@ -41,6 +41,22 @@ const jobSchema = new mongoose.Schema({
         required: [true, 'Job description is required']
     },
     profile: jobProfileSchema,
+    // Embedding fields for semantic matching
+    embedding: {
+        type: [Number],
+        default: undefined  // Don't store empty array
+    },
+    embeddingStatus: {
+        type: String,
+        enum: ['pending', 'processing', 'ready', 'failed'],
+        default: 'pending'
+    },
+    embeddingGeneratedAt: {
+        type: Date
+    },
+    embeddingError: {
+        type: String
+    },
     createdAt: {
         type: Date,
         default: Date.now
