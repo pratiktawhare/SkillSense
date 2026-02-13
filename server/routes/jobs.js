@@ -90,6 +90,7 @@ router.get('/', auth, async (req, res) => {
             id: j._id,
             title: j.title,
             descriptionPreview: j.rawText.substring(0, 150) + '...',
+            textPreview: j.rawText.substring(0, 300) + '...',
             profile: j.profile,
             embeddingStatus: j.embeddingStatus,
             hasEmbedding: j.embeddingStatus === 'ready',

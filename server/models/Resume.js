@@ -52,6 +52,26 @@ const resumeSchema = new mongoose.Schema({
         required: true
     },
     profile: profileSchema,
+    // Embedding fields for semantic matching
+    embedding: {
+        type: [Number],
+        default: undefined  // Don't store empty array
+    },
+    embeddingStatus: {
+        type: String,
+        enum: ['pending', 'processing', 'ready', 'failed'],
+        default: 'pending'
+    },
+    embeddingGeneratedAt: {
+        type: Date
+    },
+    embeddingError: {
+        type: String
+    },
+    profileCompleteness: {
+        type: Number,
+        default: 0
+    },
     uploadedAt: {
         type: Date,
         default: Date.now

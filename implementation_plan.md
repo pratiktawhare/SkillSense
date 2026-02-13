@@ -1,4 +1,4 @@
-# SkillSense - Complete Implementation Plan (8 Parts)
+# SkillSense - Complete Implementation Plan (12 Parts)
 
 > 🎯 **AI-Driven Resume-to-Role Matching Platform**
 > A production-ready recruitment intelligence system with semantic understanding, explainable AI, and beautiful UX
@@ -142,7 +142,7 @@ server/services/
 
 ---
 
-## PART 3: Semantic Feature Extraction (Job Roles) ⏳ PENDING
+## PART 3: Semantic Feature Extraction (Job Roles) ✅ COMPLETED
 
 ### Objective
 Generate semantic embeddings for job descriptions using Hugging Face Inference API.
@@ -205,7 +205,7 @@ HUGGINGFACE_API_KEY=hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ---
 
-## PART 4: Semantic Feature Extraction (Resumes) ⏳ PENDING
+## PART 4: Semantic Feature Extraction (Resumes) ✅ COMPLETED
 
 ### Objective
 Generate resume embeddings with skill phrase normalization for semantic matching.
@@ -269,81 +269,49 @@ completeness = {
 ## PART 5: Resume-to-Role Matching Engine ⏳ PENDING
 
 ### Objective
-Implement intelligent matching combining semantic similarity with structured skill analysis.
+Implement intelligent matching combining semantic similarity with structured skill analysis + visual results.
 
 ### 🎨 Creative Features
 - **Match score dial** - Animated circular gauge (0-100%)
 - **Skill match matrix** - Visual grid showing matched/missing skills
 - **Score breakdown chart** - Bar chart of individual components
 - **Match explanation** - Human-readable interpretation
-- **Quick compare** - Side-by-side candidate comparison
+- **Quick actions** - Shortlist, reject, or compare from match results
 
 ### Matching Algorithm
 ```javascript
 const matchScore = {
-  // 1. Semantic Similarity (40% weight)
-  semantic: cosineSimilarity(resumeEmbed, jobEmbed),  // 0-1
-  
-  // 2. Skill Overlap (40% weight)
-  skillMatch: calculateSkillOverlap(candidateSkills, requiredSkills),
-  
-  // 3. Experience Fit (20% weight)
-  experience: Math.min(candidateYears / requiredYears, 1.2),  // Cap at 1.2x
-  
-  // Final weighted combination
+  semantic: cosineSimilarity(resumeEmbed, jobEmbed),  // 40% weight
+  skillMatch: calculateSkillOverlap(candidateSkills, requiredSkills),  // 40%
+  experience: Math.min(candidateYears / requiredYears, 1.2),  // 20%
   final: (semantic * 0.4) + (skillMatch * 0.4) + (experience * 0.2)
 };
-```
-
-### Advanced Skill Matching
-```javascript
-// Beyond exact matches - semantic skill similarity
-const skillMatchResult = {
-  exactMatches: ["javascript", "react", "nodejs"],
-  semanticMatches: [
-    { candidate: "vue", job: "react", similarity: 0.72 },  // Similar frameworks
-    { candidate: "pytorch", job: "tensorflow", similarity: 0.85 }
-  ],
-  missingRequired: ["kubernetes"],
-  bonusSkills: ["docker", "graphql"]  // Has but not required
-};
-```
-
-### Match Interpretation
-```javascript
-const interpretation = generateInterpretation(matchScore);
-// Examples:
-// "Excellent Match (92%) - Strong technical alignment with bonus cloud skills"
-// "Good Match (78%) - Meets core requirements, missing 1 preferred skill"
-// "Partial Match (54%) - Consider for junior role or training program"
 ```
 
 ### Backend Implementation
 ```
 server/services/
-├── matchingEngine.js      # Core matching orchestration
-├── cosineSimilarity.js    # Vector math utilities
-├── skillOverlap.js        # Skill matching logic
-└── interpretationGenerator.js  # Human-readable explanations
+├── matchingEngine.js          # Core matching orchestration
+├── skillOverlap.js            # Skill matching logic
+└── interpretationGenerator.js # Human-readable explanations
 
-server/routes/
-└── matching.js            # Matching API endpoints
+server/routes/matching.js
+server/models/Match.js
+```
 
-server/models/Match.js     # Cache match results
-  - jobId, resumeId
-  - scores: { semantic, skill, experience, final }
-  - matchedSkills, missingSkills
-  - interpretation
-  - calculatedAt
+### Frontend - Matching Page
+```
+client/src/pages/MatchingView.jsx
+client/src/components/
+├── ScoreGauge.jsx, ScoreBreakdown.jsx, SkillMatrix.jsx, MatchCard.jsx
 ```
 
 ### API Endpoints
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/match/job/:jobId` | Match all/selected candidates |
+| POST | `/api/match/job/:jobId` | Run matching for all resumes |
 | GET | `/api/match/job/:jobId/results` | Get cached match results |
-| GET | `/api/match/compare` | Compare multiple candidates |
-| POST | `/api/match/explain` | Get detailed explanation |
+| PUT | `/api/match/:matchId/status` | Update status (shortlist/reject) |
 
 ---
 
@@ -353,312 +321,185 @@ server/models/Match.js     # Cache match results
 Detect unrealistic claims and fairly handle incomplete profiles with confidence scoring.
 
 ### 🎨 Creative Features
-- **Credibility score badge** - Trust indicator for each candidate
+- **Credibility score badge** - Trust indicator on each candidate
 - **Red flag alerts** - Visual warnings for suspicious claims
-- **Completeness suggestions** - "Add X to improve profile"
-- **Fair comparison mode** - Normalize for incomplete profiles
+- **Fair comparison mode** - Dynamic weight rebalancing
 
 ### Exaggeration Detection Rules
 ```javascript
 const exaggerationChecks = {
-  // Technology age validation
-  techAgeCheck: (skill, yearsExp) => {
-    const techAges = { 'react': 2013, 'vue': 2014, 'kubernetes': 2014 };
-    const maxPossible = currentYear - techAges[skill];
-    return yearsExp > maxPossible ? 'FLAGGED' : 'OK';
-  },
-  
-  // Expert overload detection
-  expertOverload: (skills) => {
-    const expertClaims = skills.filter(s => s.level === 'expert');
-    return expertClaims.length > 10 ? 'SUSPICIOUS' : 'OK';
-  },
-  
-  // Experience consistency
-  careerConsistency: (totalYears, roles) => {
-    const summedYears = roles.reduce((sum, r) => sum + r.years, 0);
-    return summedYears > totalYears * 1.5 ? 'INCONSISTENT' : 'OK';
-  }
+  techAgeCheck,      // Technology release year vs claimed experience
+  expertOverload,    // Too many "expert" claims
+  careerConsistency  // Overlapping role durations
 };
+// Penalty: none(0), minor(5%), moderate(15%), severe(30%)
 ```
 
-### Penalty Calculation
-```javascript
-const exaggerationPenalty = {
-  none: 0,
-  minor: 0.05,      // Small inconsistencies
-  moderate: 0.15,   // Multiple red flags
-  severe: 0.30      // Clearly fabricated
-};
-
-adjustedScore = rawScore * (1 - penalty);
-```
-
-### Incomplete Profile Handling
-```javascript
-// Dynamic weight rebalancing based on available data
-const getWeights = (profile) => {
-  if (!profile.experience.length) {
-    return { semantic: 0.5, skills: 0.4, education: 0.1 };  // Boost others
-  }
-  if (!profile.education.length) {
-    return { semantic: 0.4, skills: 0.4, experience: 0.2 };  // Standard
-  }
-  // Full profile
-  return { semantic: 0.35, skills: 0.35, experience: 0.2, education: 0.1 };
-};
-```
-
-### Confidence-Weighted Skill Scoring
-```javascript
-// Skills with higher extraction confidence count more
-const weightedSkillScore = profile.skills.reduce((acc, skill) => {
-  const isMatched = requiredSkills.includes(skill.name);
-  return acc + (isMatched ? skill.confidence : 0);
-}, 0) / totalConfidenceWeight;
-```
-
-### Backend Implementation
-```
-server/services/
-├── exaggerationDetector.js    # Rule-based fraud detection
-├── completenessAnalyzer.js    # Profile completeness scoring
-├── confidenceCalculator.js    # Weighted confidence scoring
-└── fairnessAdjuster.js        # Normalize for missing data
-
-server/models/Resume.js        # Add fields:
-  - credibilityScore: Number    // 0-100
-  - flags: [{ type, severity, detail }]
-  - profileCompleteness: Number
-```
+### Backend: `exaggerationDetector.js`, `confidenceCalculator.js`, `fairnessAdjuster.js`
 
 ---
 
 ## PART 7: Candidate Ranking and Stability Evaluation ⏳ PENDING
 
 ### Objective
-Produce stable, fair rankings with consistency analysis across job domains.
+Produce stable, fair rankings with sensitivity analysis.
 
 ### 🎨 Creative Features
-- **Ranking animation** - Smooth reorder animation on updates
-- **Stability indicator** - Green/Yellow/Red badge per candidate
-- **Rank history** - Track position changes over time
-- **Domain comparison** - How same candidate ranks across different jobs
+- **Ranking animation** - Smooth reorder on updates
+- **Stability indicator** - Green/Yellow/Red per candidate
 - **Sensitivity analysis** - "What if" skill additions
+- **Rank breakdown** - Why one ranks above another
 
-### Ranking Algorithm
-```javascript
-const generateRankings = async (jobId, options = {}) => {
-  const job = await Job.findById(jobId);
-  const resumes = await Resume.find({ recruiter: job.recruiter });
-  
-  // Calculate match scores
-  const matches = await Promise.all(
-    resumes.map(r => matchingEngine.match(r, job))
-  );
-  
-  // Sort by final score
-  const ranked = matches
-    .sort((a, b) => b.scores.final - a.scores.final)
-    .map((m, idx) => ({
-      ...m,
-      rank: idx + 1,
-      percentile: ((matches.length - idx) / matches.length) * 100
-    }));
-  
-  return ranked;
-};
-```
+### Backend: `rankingEngine.js`, `stabilityTester.js`, `rankHistoryTracker.js`
+### Routes: `rankings.js`
+### Model: `Ranking.js`
 
-### Stability Testing
-```javascript
-// Measure how much rankings change with small profile modifications
-const stabilityAnalysis = {
-  // Add one skill - how much does rank change?
-  skillSensitivity: testRankChange(resume, { addSkill: 'docker' }),
-  
-  // Modify experience - how much does rank change?
-  experienceSensitivity: testRankChange(resume, { addYears: 1 }),
-  
-  // Remove lowest skill - how much does rank change?
-  removalSensitivity: testRankChange(resume, { removeWeakestSkill: true }),
-  
-  // Stability score: 1 = rock solid, 0 = very volatile
-  overallStability: calculateStabilityScore(sensitivities)
-};
-```
-
-### Cross-Domain Fairness
-```javascript
-// Test same resume against different job categories
-const domainAnalysis = {
-  techRoles: await rankInDomain(resume, 'technology'),
-  financeRoles: await rankInDomain(resume, 'finance'),
-  healthcareRoles: await rankInDomain(resume, 'healthcare'),
-  
-  // Check for unexpected bias
-  biasIndicators: detectDomainBias(results)
-};
-```
-
-### Backend Implementation
-```
-server/services/
-├── rankingEngine.js       # Core ranking logic
-├── stabilityTester.js     # Sensitivity analysis
-├── fairnessChecker.js     # Cross-domain bias detection
-└── rankHistoryTracker.js  # Historical rank tracking
-
-server/routes/
-└── rankings.js            # Ranking API endpoints
-
-server/models/Ranking.js   # Store ranking snapshots
-  - jobId, rankings: [{ resumeId, rank, score }]
-  - stabilityMetrics
-  - generatedAt
-```
-
-### API Endpoints
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/rankings/job/:jobId` | Get current rankings |
+| GET | `/api/rankings/job/:jobId` | Get rankings |
 | POST | `/api/rankings/job/:jobId/analyze` | Stability analysis |
-| GET | `/api/rankings/candidate/:id/history` | Rank history |
 | POST | `/api/rankings/sensitivity` | "What-if" analysis |
 
 ---
 
-## PART 8: Ranking Stability Metrics & Final UI ⏳ PENDING
+## PART 8: Analytics Dashboard & Polished UI ⏳ PENDING
 
 ### Objective
-Build polished, recruiter-focused dashboard with comprehensive analytics and beautiful visualizations.
+Build polished, recruiter-focused analytics dashboard with visualizations.
 
 ### 🎨 Creative Features
-- **Dashboard overview** - Key metrics at a glance
-- **Interactive ranking table** - Sort, filter, bulk actions
-- **Score breakdown cards** - Expandable detail view
+- **Stats overview cards** - Animated counters
+- **Interactive ranking table** - Sort, filter, bulk shortlist/reject
+- **Score breakdown** - Expandable horizontal bar charts
 - **Skill gap analysis** - Visual skill comparison
-- **Match quality heatmap** - Jobs × Candidates matrix
-- **Export reports** - PDF/CSV generation
-- **Dark/Light mode** - Theme switcher
-- **Responsive design** - Mobile-friendly
+- **Match quality distribution** - Score distribution chart
+- **Activity feed** - Recent events timeline
 
-### Dashboard Components
-
-#### 1. Overview Stats
+### Frontend
 ```
-┌─────────────────────────────────────────────────────────┐
-│  📊 DASHBOARD OVERVIEW                                   │
-├──────────┬──────────┬──────────┬───────────────────────┤
-│ 📄 12    │ 💼 5     │ 🎯 87%   │ ⚡ 3 new matches     │
-│ Resumes  │ Jobs     │ Avg Match│ Today                │
-└──────────┴──────────┴──────────┴───────────────────────┘
+pages/Analytics.jsx
+components/StatsCard.jsx, RankingTable.jsx, ActivityFeed.jsx, MatchDistribution.jsx
 ```
 
-#### 2. Interactive Ranking Table
-```
-┌────┬─────────────────┬───────┬──────────┬──────────┬─────────┐
-│Rank│ Candidate       │ Score │ Skills   │ Exp      │ Actions │
-├────┼─────────────────┼───────┼──────────┼──────────┼─────────┤
-│ 1  │ 👤 Sarah Chen   │ 94%   │ ████████ │ 5 yrs    │ 👁️ 📥  │
-│ 2  │ 👤 Alex Kumar   │ 88%   │ ███████░ │ 4 yrs    │ 👁️ 📥  │
-│ 3  │ 👤 Maria Lopez  │ 82%   │ ██████░░ │ 3 yrs    │ 👁️ 📥  │
-└────┴─────────────────┴───────┴──────────┴──────────┴─────────┘
-```
+### Backend: `metricsService.js`, `routes/metrics.js`
 
-#### 3. Score Breakdown Visual
-```
-┌─────────────────────────────────────────────────────────┐
-│  SARAH CHEN - Score Breakdown                           │
-├─────────────────────────────────────────────────────────┤
-│  Semantic Match    ████████████████████░░ 85%           │
-│  Skill Overlap     █████████████████████░ 92%           │
-│  Experience Fit    ████████████████████████ 100%        │
-│  ─────────────────────────────────────                  │
-│  Final Score       ████████████████████░░ 94%           │
-└─────────────────────────────────────────────────────────┘
-```
-
-#### 4. Skill Match Matrix
-```
-┌─────────────────────────────────────────────────────────┐
-│  SKILL MATCH ANALYSIS                                   │
-├─────────────────────────────────────────────────────────┤
-│  Required          Candidate Has       Status           │
-│  ─────────         ─────────────       ──────           │
-│  JavaScript        ✓ JavaScript        ✅ Match         │
-│  React             ✓ React             ✅ Match         │
-│  Node.js           ✓ Node.js           ✅ Match         │
-│  Kubernetes        ✗                   ⚠️ Missing       │
-│  ─────────────────────────────────────                  │
-│  + Docker, GraphQL, TypeScript         🎁 Bonus         │
-└─────────────────────────────────────────────────────────┘
-```
-
-### Metrics & Analytics
-
-```javascript
-const dashboardMetrics = {
-  // Overall statistics
-  totalResumes: Number,
-  totalJobs: Number,
-  averageMatchScore: Number,
-  strongMatches: Number,  // Score > 80%
-  
-  // Stability metrics
-  rankingStability: {
-    score: 0.92,          // 0-1
-    label: "Highly Stable",
-    color: "green"
-  },
-  
-  // Confidence intervals
-  confidenceMetrics: {
-    highConfidence: 8,    // Candidates
-    mediumConfidence: 3,
-    needsReview: 1
-  },
-  
-  // Skill coverage
-  skillAnalytics: {
-    mostCommon: ["javascript", "react", "python"],
-    rarest: ["rust", "elixir"],
-    coverageGaps: ["kubernetes", "terraform"]
-  }
-};
-```
-
-### Frontend Implementation
-```
-client/src/
-├── pages/
-│   ├── Dashboard.jsx          # Overview with stats cards
-│   ├── MatchingView.jsx       # Job selection + results
-│   ├── CandidateDetail.jsx    # Full candidate breakdown
-│   ├── CompareView.jsx        # Side-by-side comparison
-│   └── Analytics.jsx          # Charts and insights
-└── components/
-    ├── StatsCard.jsx          # Animated stat display
-    ├── RankingTable.jsx       # Sortable, filterable table
-    ├── ScoreGauge.jsx         # Circular score indicator
-    ├── ScoreBreakdown.jsx     # Bar chart breakdown
-    ├── SkillMatrix.jsx        # Match visualization
-    ├── StabilityBadge.jsx     # Green/Yellow/Red indicator
-    ├── CandidateCard.jsx      # Expandable candidate info
-    ├── ComparisonSlider.jsx   # Compare 2-3 candidates
-    ├── SkillCloud.jsx         # Visual skill representation
-    ├── TrendChart.jsx         # Historical data visualization
-    └── ExportButton.jsx       # PDF/CSV export
-```
-
-### API Endpoints
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/metrics/overview` | Dashboard stats |
+| GET | `/api/metrics/overview` | Dashboard summary |
 | GET | `/api/metrics/job/:id` | Job-specific analytics |
-| GET | `/api/reports/job/:id` | Generate report data |
-| POST | `/api/export/pdf` | Export as PDF |
-| POST | `/api/export/csv` | Export as CSV |
+| GET | `/api/metrics/skills-distribution` | Skill analytics |
+
+---
+
+## PART 9: Candidate Detail Page & Comparison View ⏳ PENDING
+
+### Objective
+Dedicated candidate profile page + side-by-side comparison for deep evaluation.
+
+### 🎨 Creative Features
+- **Full candidate profile** - Skills, experience, education, match history
+- **Side-by-side comparison** - Compare 2-3 candidates visually
+- **Skill radar chart** - Spider chart for skill coverage
+- **Match history** - Scores across different jobs
+- **Notes & annotations** - Recruiter private notes
+
+### Frontend
+```
+pages/CandidateDetail.jsx, CompareView.jsx
+components/SkillRadar.jsx, MatchHistory.jsx, NoteEditor.jsx, ComparisonGrid.jsx
+```
+
+### Backend: `models/Note.js`, `routes/candidates.js`, `routes/comparison.js`
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/candidates/:id/full` | Full candidate profile |
+| GET | `/api/candidates/:id/match-history` | All match scores |
+| POST | `/api/candidates/:id/notes` | Add recruiter note |
+| POST | `/api/compare` | Compare candidates |
+
+---
+
+## PART 10: Notifications, Settings & User Preferences ⏳ PENDING
+
+### Objective
+Add notification system, settings page, and personalization.
+
+### 🎨 Creative Features
+- **Toast notifications** - In-app alerts for completions
+- **Notification center** - Bell icon + dropdown
+- **Settings page** - Profile edit, matching weight preferences, theme toggle
+- **Weight sliders** - Custom semantic/skill/experience percentages
+
+### Frontend
+```
+pages/Settings.jsx
+components/NotificationBell.jsx, ToastProvider.jsx, WeightSlider.jsx
+context/NotificationContext.jsx, SettingsContext.jsx
+```
+
+### Backend: `models/Notification.js`, `models/UserSettings.js`
+### Routes: `notifications.js`, `settings.js`
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/notifications` | Get notifications |
+| PUT | `/api/notifications/:id/read` | Mark as read |
+| GET/PUT | `/api/settings` | Get/update settings |
+| PUT | `/api/auth/profile` | Update name/password |
+
+---
+
+## PART 11: Export, Reports & Data Management ⏳ PENDING
+
+### Objective
+Enable PDF/CSV export, batch operations, and data management tools.
+
+### 🎨 Creative Features
+- **PDF report generation** - Professional downloadable report
+- **CSV export** - Rankings as spreadsheets
+- **Batch operations** - Bulk delete, embed, shortlist
+- **Multi-upload** - Drag-n-drop multiple PDFs at once
+- **Archive completed** - Archive old jobs
+
+### Frontend
+```
+components/ExportButton.jsx, BatchActions.jsx, MultiUpload.jsx
+```
+
+### Backend: `pdfGenerator.js`, `csvExporter.js`, `batchProcessor.js`
+### Routes: `exports.js`
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/export/job/:id/pdf` | Download PDF report |
+| GET | `/api/export/job/:id/csv` | Download CSV ranking |
+| POST | `/api/batch/delete-resumes` | Bulk delete |
+| POST | `/api/resumes/multi-upload` | Upload multiple PDFs |
+
+---
+
+## PART 12: Landing Page, Sidebar Navigation & Final Polish ⏳ PENDING
+
+### Objective
+Build beautiful public landing page, professional sidebar navigation, and full polish.
+
+### 🎨 Creative Features
+- **Animated landing page** - Motion effects, gradient backgrounds, testimonials
+- **Sidebar navigation** - Professional left sidebar replacing top tabs
+- **Breadcrumbs** - Current location awareness
+- **Loading skeletons** - Content-shaped placeholders
+- **Empty states** - Beautiful illustrations
+- **Keyboard shortcuts** - Ctrl+K search
+- **Mobile responsive** - Hamburger menu + responsive layouts
+- **Error boundaries** - Graceful error handling
+
+### Frontend
+```
+pages/Landing.jsx
+components/Sidebar.jsx, Breadcrumb.jsx, SearchBar.jsx, SkeletonLoader.jsx, EmptyState.jsx
+layouts/AppLayout.jsx, PublicLayout.jsx
+```
 
 ---
 
@@ -673,7 +514,8 @@ client/src/
 | Auth | JWT + bcryptjs |
 | File Upload | Multer |
 | PDF Parsing | pdf-parse-new |
-| AI/Embeddings | Hugging Face Inference API |
+| PDF Generation | pdfkit |
+| AI/Embeddings | @huggingface/transformers (local) |
 
 ### Frontend
 | Component | Technology |
@@ -682,15 +524,15 @@ client/src/
 | Styling | Tailwind CSS |
 | Routing | React Router v6 |
 | HTTP | Axios |
-| Icons | Lucide React / Heroicons |
-| Charts | Recharts (optional) |
+| Charts | Recharts |
+| Animations | CSS transitions + framer-motion |
 
 ### AI/NLP
 | Component | Details |
 |-----------|---------|
-| Model | sentence-transformers/all-MiniLM-L6-v2 |
+| Model | Xenova/all-MiniLM-L6-v2 |
 | Vector Size | 384 dimensions |
-| API | Hugging Face Inference (FREE tier) |
+| Runtime | Transformers.js (local, no API key) |
 | Similarity | Cosine similarity |
 
 ---
@@ -700,50 +542,44 @@ client/src/
 ```
 SkillSense/
 ├── server/
-│   ├── config/
-│   │   └── db.js
-│   ├── middleware/
-│   │   └── auth.js
+│   ├── config/db.js
+│   ├── middleware/auth.js
 │   ├── models/
-│   │   ├── User.js
-│   │   ├── Resume.js
-│   │   ├── Job.js
-│   │   ├── Match.js
-│   │   └── Ranking.js
+│   │   ├── User.js, Resume.js, Job.js
+│   │   ├── Match.js, Ranking.js
+│   │   ├── Notification.js, Note.js, UserSettings.js
 │   ├── routes/
-│   │   ├── auth.js
-│   │   ├── resumes.js
-│   │   ├── jobs.js
-│   │   ├── matching.js
-│   │   ├── rankings.js
-│   │   └── metrics.js
+│   │   ├── auth.js, resumes.js, jobs.js
+│   │   ├── matching.js, rankings.js, metrics.js
+│   │   ├── candidates.js, comparison.js
+│   │   ├── notifications.js, settings.js, exports.js
 │   ├── services/
-│   │   ├── profiler.js
-│   │   ├── skillNormalizer.js
-│   │   ├── huggingFaceClient.js
-│   │   ├── jobEmbedding.js
-│   │   ├── resumeEmbedding.js
-│   │   ├── matchingEngine.js
-│   │   ├── cosineSimilarity.js
-│   │   ├── exaggerationDetector.js
-│   │   ├── rankingEngine.js
-│   │   └── stabilityTester.js
-│   ├── .env
-│   ├── package.json
-│   └── server.js
+│   │   ├── profiler.js, skillNormalizer.js
+│   │   ├── huggingFaceClient.js, jobEmbedding.js, resumeEmbedding.js
+│   │   ├── matchingEngine.js, skillOverlap.js, interpretationGenerator.js
+│   │   ├── exaggerationDetector.js, confidenceCalculator.js, fairnessAdjuster.js
+│   │   ├── rankingEngine.js, stabilityTester.js
+│   │   ├── metricsService.js, pdfGenerator.js, csvExporter.js, batchProcessor.js
+│   ├── .env, package.json, server.js
 ├── client/
 │   ├── src/
 │   │   ├── api.js
-│   │   ├── context/
-│   │   ├── pages/
-│   │   ├── components/
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── index.html
-│   ├── package.json
-│   └── vite.config.js
+│   │   ├── context/ (AuthContext, NotificationContext, SettingsContext)
+│   │   ├── layouts/ (AppLayout, PublicLayout)
+│   │   ├── pages/ (Landing, Login, Register, Dashboard, MatchingView,
+│   │   │          CandidateDetail, CompareView, Analytics, Settings)
+│   │   ├── components/ (Sidebar, Breadcrumb, ResumeUpload, ResumeList,
+│   │   │               JobForm, JobList, StatsCard, ScoreGauge, ScoreBreakdown,
+│   │   │               SkillMatrix, SkillRadar, MatchCard, RankingTable,
+│   │   │               StabilityBadge, ComparisonGrid, ActivityFeed,
+│   │   │               MatchDistribution, NoteEditor, NotificationBell,
+│   │   │               ToastProvider, WeightSlider, ExportButton, BatchActions,
+│   │   │               MultiUpload, SearchBar, SkeletonLoader, EmptyState,
+│   │   │               ErrorBoundary)
+│   │   ├── App.jsx, main.jsx
+│   ├── index.html, package.json, vite.config.js
 ├── implementation_plan.md
-└── README.md
+├── LAB_REPORT.md, PROGRESS.md, README.md
 ```
 
 ---
@@ -754,12 +590,16 @@ SkillSense/
 |------|-------------|--------|------------|
 | 1 | Authentication + Upload | ✅ Complete | ⭐⭐ |
 | 2 | Resume/Job Profiling | ✅ Complete | ⭐⭐⭐ |
-| 3 | Job Embeddings (HuggingFace) | ⏳ Pending | ⭐⭐⭐ |
-| 4 | Resume Embeddings | ⏳ Pending | ⭐⭐⭐ |
+| 3 | Job Embeddings (Transformers.js) | ✅ Complete | ⭐⭐⭐ |
+| 4 | Resume Embeddings | ✅ Complete | ⭐⭐⭐ |
 | 5 | Matching Engine | ⏳ Pending | ⭐⭐⭐⭐ |
 | 6 | Exaggeration Detection | ⏳ Pending | ⭐⭐⭐⭐ |
 | 7 | Ranking + Stability | ⏳ Pending | ⭐⭐⭐⭐ |
-| 8 | Final Dashboard | ⏳ Pending | ⭐⭐⭐⭐⭐ |
+| 8 | Analytics Dashboard | ⏳ Pending | ⭐⭐⭐⭐⭐ |
+| 9 | Candidate Detail + Comparison | ⏳ Pending | ⭐⭐⭐⭐ |
+| 10 | Notifications + Settings | ⏳ Pending | ⭐⭐⭐ |
+| 11 | Export, Reports & Batch Ops | ⏳ Pending | ⭐⭐⭐⭐ |
+| 12 | Landing Page + Sidebar + Polish | ⏳ Pending | ⭐⭐⭐⭐⭐ |
 
 ---
 

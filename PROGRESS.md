@@ -78,76 +78,164 @@
 
 ---
 
-## 🔄 Part 4: Resume Embeddings (NEXT)
+## ✅ Part 4: Resume Embeddings + Profile Completeness
 
-### What Will Be Built
-- Same embedding generation for resumes
-- Profile completeness scoring
-- Resume quality indicators
+### What Was Built
+- AI embedding generation for resumes (same Transformers.js model)
+- Profile completeness scoring (0-100%) with weighted criteria
+- Background embedding on resume upload
+- Batch embedding for all pending resumes
+- Expandable resume & job cards with full details
 
-### What You'll See
-- 🧠 "AI Ready" badge on resume cards
-- 📊 Profile completeness percentage
-- ⚠️ Warnings for incomplete profiles
+### What You Can Test
+1. **Upload a resume** → Watch "Pending" → "AI Ready" badge appear
+2. **Click any resume card** → Expands to show ALL skills grouped by category, experience, education, summary, and text preview
+3. **Click any job card** → Expands to show ALL required/preferred skills, experience, education, and description
+4. **Click "+X more"** on skills → Card expands to show all skills
+5. **Profile completeness bar** → See 0-100% meter on each resume card
+6. **Click "🔄 Generate"** → Manually trigger embedding for pending resumes
+
+### Visual Changes
+- 🧠 **"AI Ready"** green badge on resume cards (same as jobs)
+- 📊 **Profile completeness meter** - colored bar (red/yellow/green)
+- ▼ **Expand chevron** - rotates when card is expanded
+- 💜 **Purple border glow** on expanded cards
+- 🏷️ **Skills grouped by category** in expanded view (programming, frontend, etc.)
+- 💼 **Full experience details** with company and years
+- 🎓 **Full education details** with institution
+- 📝 **Text preview** of extracted resume content
+
+### Behind the Scenes
+- Profile completeness: Skills(25%) + Experience(25%) + Education(20%) + Summary(15%) + Embedding(15%)
+- Improvement suggestions generated for incomplete profiles
+- Resume text prepared from structured profile + raw text for best embedding quality
 
 ---
 
-## 🔜 Part 5: Matching Engine (UPCOMING)
+## ⏳ Part 5: Matching Engine (NEXT)
 
 ### What Will Be Built
-- Resume-to-job semantic matching
-- Skill overlap analysis
+- Resume-to-job semantic matching using cosine similarity
+- Skill overlap analysis (exact + semantic matches)
 - Experience compatibility scoring
-- Match percentage calculation
+- Weighted final score (semantic 40% + skills 40% + experience 20%)
+- Match interpretation in plain English
+- Shortlist / reject actions
 
 ### What You'll See
-- 🎯 Match scores (0-100%) between resumes and jobs
-- 📊 Breakdown of skill matches
-- 📈 Ranked candidate lists per job
+- 🎯 Match scores (0-100%) with animated circular gauge
+- 📊 Score breakdown (semantic / skill / experience bars)
+- ✅⚠️🎁 Skill matrix (matched / missing / bonus skills)
+- 🎯 New "Matching" tab in navigation
 
 ---
 
-## 🔜 Part 6: Exaggeration Detection (UPCOMING)
+## ⏳ Part 6: Exaggeration Detection
 
 ### What Will Be Built
-- Detection of unrealistic skill claims
-- Profile credibility scoring
-- Flag suspicious resumes
+- Technology age validation (can't have 15 years of React)
+- Expert overload detection (too many "expert" claims)
+- Career consistency checks (overlapping roles)
+- Credibility scoring with penalty system
 
 ### What You'll See
-- ⚠️ Warning flags on suspicious claims
+- ⚠️ Red flag warnings on suspicious claims
 - 📊 Credibility score per resume
 - 🔍 Detailed analysis of flagged items
 
 ---
 
-## 🔜 Part 7: Ranking & Stability (UPCOMING)
+## ⏳ Part 7: Ranking & Stability
 
 ### What Will Be Built
-- Fair candidate ranking algorithm
-- Consistency analysis
-- Tie-breaking logic
+- Multi-factor ranking algorithm
+- Stability/sensitivity analysis ("what if" scenarios)
+- Rank consistency checks
 
 ### What You'll See
-- 🏆 Ranked candidate lists
-- 📊 Score distribution charts
-- ⚖️ Fairness indicators
+- 🏆 Ranked candidate lists per job
+- 🟢🟡🔴 Stability indicators
+- 📊 "What if you added Docker?" scenario testing
 
 ---
 
-## 🔜 Part 8: Final Dashboard (UPCOMING)
+## ⏳ Part 8: Analytics Dashboard
 
 ### What Will Be Built
-- Comprehensive analytics dashboard
-- Data visualization charts
-- Export functionality
-- Final polish and animations
+- Overview stats cards with animated counters
+- Interactive ranking table with sort/filter
+- Skill gap analysis visualization
+- Match quality distribution charts
+- Activity feed timeline
 
 ### What You'll See
-- 📊 Interactive charts and graphs
-- 📈 Hiring funnel visualization
-- 📥 Export to CSV/PDF
-- ✨ Polished UI with micro-animations
+- 📊 Dashboard with key metrics at a glance
+- 📈 Charts showing score distributions
+- 🗂️ Interactive tables with bulk actions
+
+---
+
+## ⏳ Part 9: Candidate Detail + Comparison
+
+### What Will Be Built
+- Full candidate profile page
+- Side-by-side comparison (2-3 candidates)
+- Skill radar/spider chart
+- Match history across jobs
+- Recruiter notes & annotations
+
+### What You'll See
+- 👤 Detailed candidate pages with all data
+- ⚖️ Side-by-side comparison grids
+- 📝 Private recruiter notes per candidate
+
+---
+
+## ⏳ Part 10: Notifications + Settings
+
+### What Will Be Built
+- Toast notification system
+- Notification bell with dropdown
+- Settings page (profile, matching weights, theme)
+- Custom weight sliders for matching algorithm
+
+### What You'll See
+- 🔔 Notification bell in header
+- ⚙️ Settings page with weight customization
+- 🎨 Theme toggle (dark/light)
+
+---
+
+## ⏳ Part 11: Export, Reports & Batch Ops
+
+### What Will Be Built
+- PDF report generation per job
+- CSV export for rankings
+- Batch operations (bulk delete, embed, shortlist)
+- Multi-file upload (multiple PDFs at once)
+
+### What You'll See
+- 📄 Downloadable PDF reports
+- 📊 CSV spreadsheet export
+- 📤 Multi-file drag-and-drop upload
+
+---
+
+## ⏳ Part 12: Landing Page + Sidebar + Final Polish
+
+### What Will Be Built
+- Animated public landing page
+- Sidebar navigation (replacing top tabs)
+- Loading skeletons & empty states
+- Keyboard shortcuts (Ctrl+K search)
+- Mobile responsive design
+- Error boundaries
+
+### What You'll See
+- 🚀 Beautiful animated landing page
+- 📱 Professional sidebar navigation
+- ⌨️ Keyboard shortcuts
+- 📱 Mobile-friendly layout
 
 ---
 
@@ -160,6 +248,7 @@
 | ⚪ Pending | Awaiting embedding generation |
 | ⚠️ Failed | Embedding failed (click to retry) |
 | ⭐ Required | This skill is required for the job |
+| 📊 Profile % | Profile completeness score |
 | 🔵🟣🟢🟠 Tags | Skill categories (programming, frontend, etc.) |
 
 ---
@@ -178,9 +267,9 @@ http://localhost:5173
 
 # 4. Upload resumes and create jobs
 
-# 5. Watch the magic happen!
+# 5. Click cards to expand and see full details!
 ```
 
 ---
 
-*Last updated: Part 3 Complete*
+*Last updated: Part 4 Complete — Feb 11, 2026*

@@ -75,6 +75,15 @@ const Dashboard = () => {
         }
     };
 
+    const refreshResumes = async () => {
+        try {
+            const resumeRes = await resumeAPI.getAll();
+            setResumes(resumeRes.data);
+        } catch (error) {
+            console.error('Error refreshing resumes:', error);
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
             {/* Header */}
@@ -136,7 +145,7 @@ const Dashboard = () => {
                                     <ResumeUpload onUpload={handleResumeUpload} />
                                 </div>
                                 <div className="lg:col-span-2">
-                                    <ResumeList resumes={resumes} onDelete={handleResumeDelete} />
+                                    <ResumeList resumes={resumes} onDelete={handleResumeDelete} onRefresh={refreshResumes} />
                                 </div>
                             </>
                         ) : (

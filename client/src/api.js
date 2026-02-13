@@ -32,7 +32,11 @@ export const resumeAPI = {
     }),
     getAll: () => api.get('/resumes'),
     getOne: (id) => api.get(`/resumes/${id}`),
-    delete: (id) => api.delete(`/resumes/${id}`)
+    delete: (id) => api.delete(`/resumes/${id}`),
+    // Embedding endpoints
+    generateEmbedding: (id) => api.post(`/resumes/${id}/embed`),
+    getEmbeddingStatus: (id) => api.get(`/resumes/${id}/embedding-status`),
+    batchEmbed: () => api.post('/resumes/batch-embed')
 };
 
 // Job API

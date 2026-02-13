@@ -4,26 +4,10 @@ import { jobAPI } from '../api';
 // Embedding status badge component
 const EmbeddingBadge = ({ status, onGenerate, isGenerating }) => {
     const statusConfig = {
-        ready: {
-            color: 'bg-green-500/20 text-green-400 border-green-500/30',
-            icon: '🧠',
-            label: 'AI Ready'
-        },
-        processing: {
-            color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-            icon: '⏳',
-            label: 'Processing...'
-        },
-        pending: {
-            color: 'bg-slate-500/20 text-slate-400 border-slate-500/30',
-            icon: '○',
-            label: 'Pending'
-        },
-        failed: {
-            color: 'bg-red-500/20 text-red-400 border-red-500/30',
-            icon: '⚠️',
-            label: 'Failed'
-        }
+        ready: { color: 'bg-green-500/20 text-green-400 border-green-500/30', icon: '🧠', label: 'AI Ready' },
+        processing: { color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30', icon: '⏳', label: 'Processing...' },
+        pending: { color: 'bg-slate-500/20 text-slate-400 border-slate-500/30', icon: '○', label: 'Pending' },
+        failed: { color: 'bg-red-500/20 text-red-400 border-red-500/30', icon: '⚠️', label: 'Failed' }
     };
 
     const config = statusConfig[status] || statusConfig.pending;
@@ -36,10 +20,9 @@ const EmbeddingBadge = ({ status, onGenerate, isGenerating }) => {
             </span>
             {(status === 'pending' || status === 'failed') && (
                 <button
-                    onClick={onGenerate}
+                    onClick={(e) => { e.stopPropagation(); onGenerate(); }}
                     disabled={isGenerating}
-                    className="text-xs px-2 py-1 bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 
-                             rounded border border-purple-500/30 transition disabled:opacity-50"
+                    className="text-xs px-2 py-1 bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 rounded border border-purple-500/30 transition disabled:opacity-50"
                 >
                     {isGenerating ? '...' : '🔄 Generate'}
                 </button>
@@ -48,7 +31,7 @@ const EmbeddingBadge = ({ status, onGenerate, isGenerating }) => {
     );
 };
 
-// Skill tag component for displaying extracted skills
+// Skill tag component
 const SkillTag = ({ skill, variant = 'default' }) => {
     const categoryColors = {
         programming: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
@@ -61,7 +44,6 @@ const SkillTag = ({ skill, variant = 'default' }) => {
         other: 'bg-slate-500/20 text-slate-300 border-slate-500/30'
     };
 
-    // Required skills get a stronger style
     const baseColors = categoryColors[skill.category] || categoryColors.other;
     const colorClass = variant === 'required'
         ? baseColors.replace('/20', '/30').replace('/30', '/50')
@@ -75,15 +57,94 @@ const SkillTag = ({ skill, variant = 'default' }) => {
     );
 };
 
+// Expanded detail panel for a job
+const JobDetail = ({ job }) => {
+    return (
+        <div className="mt-4 pt-4 border-t border-slate-600 space-y-4 animate-in">
+            {/* All Required Skills - grouped by category */}
+            {job.profile?.requiredSkills?.length > 0 && (
+                <div>
+                    <h5 className="text-sm font-semibold text-slate-300 mb-2">
+                        Required Skills ({job.profile.requiredSkills.length})
+                    </h5>
+                    <div className="space-y-2">
+                        {Object.entries(
+                            job.profile.requiredSkills.reduce((groups, skill) => {
+                                const cat = skill.category || 'other';
+                                if (!groups[cat]) groups[cat] = [];
+                                groups[cat].push(skill);
+                                return groups;
+                            }, {})
+                        ).map(([category, skills]) => (
+                            <div key={category}>
+                                <span className="text-xs text-slate-500 uppercase tracking-wider">{category.replace('_', '/')}</span>
+                                <div className="flex flex-wrap gap-1.5 mt-1">
+                                    {skills.map((skill, idx) => (
+                                        <SkillTag key={idx} skill={skill} variant="required" />
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* All Preferred Skills */}
+            {job.profile?.preferredSkills?.length > 0 && (
+                <div>
+                    <h5 className="text-sm font-semibold text-slate-300 mb-2">
+                        Preferred Skills ({job.profile.preferredSkills.length})
+                    </h5>
+                    <div className="flex flex-wrap gap-1.5">
+                        {job.profile.preferredSkills.map((skill, idx) => (
+                            <SkillTag key={idx} skill={skill} />
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Experience Requirement */}
+            {job.profile?.totalYearsRequired > 0 && (
+                <div>
+                    <h5 className="text-sm font-semibold text-slate-300 mb-1">Experience Requirement</h5>
+                    <p className="text-purple-400 text-sm">{job.profile.totalYearsRequired}+ years required</p>
+                </div>
+            )}
+
+            {/* Education Requirements */}
+            {job.profile?.education?.length > 0 && (
+                <div>
+                    <h5 className="text-sm font-semibold text-slate-300 mb-1">Education</h5>
+                    {job.profile.education.map((edu, idx) => (
+                        <p key={idx} className="text-slate-400 text-sm">
+                            🎓 {edu.level} {edu.field ? `in ${edu.field}` : ''}
+                        </p>
+                    ))}
+                </div>
+            )}
+
+            {/* Job Description Preview */}
+            {job.textPreview && (
+                <div>
+                    <h5 className="text-sm font-semibold text-slate-300 mb-1">Description (Preview)</h5>
+                    <p className="text-slate-500 text-xs font-mono bg-slate-900/50 p-3 rounded-lg leading-relaxed">
+                        {job.textPreview}
+                    </p>
+                </div>
+            )}
+        </div>
+    );
+};
+
 const JobList = ({ jobs, onDelete, onRefresh }) => {
     const [generatingIds, setGeneratingIds] = useState(new Set());
+    const [expandedId, setExpandedId] = useState(null);
 
     const handleGenerateEmbedding = async (jobId) => {
         setGeneratingIds(prev => new Set([...prev, jobId]));
 
         try {
             await jobAPI.generateEmbedding(jobId);
-            // Refresh the jobs list to show updated status
             if (onRefresh) {
                 onRefresh();
             }
@@ -96,6 +157,10 @@ const JobList = ({ jobs, onDelete, onRefresh }) => {
                 return next;
             });
         }
+    };
+
+    const toggleExpand = (id) => {
+        setExpandedId(expandedId === id ? null : id);
     };
 
     if (jobs.length === 0) {
@@ -118,7 +183,11 @@ const JobList = ({ jobs, onDelete, onRefresh }) => {
                 {jobs.map((job) => (
                     <div
                         key={job.id}
-                        className="bg-slate-800/50 backdrop-blur-xl border border-slate-700 rounded-xl p-4 hover:border-slate-600 transition"
+                        className={`bg-slate-800/50 backdrop-blur-xl border rounded-xl p-4 transition cursor-pointer ${expandedId === job.id
+                                ? 'border-purple-500/50 shadow-lg shadow-purple-500/10'
+                                : 'border-slate-700 hover:border-slate-600'
+                            }`}
+                        onClick={() => toggleExpand(job.id)}
                     >
                         <div className="flex items-start justify-between">
                             <div className="flex-1 min-w-0">
@@ -148,47 +217,61 @@ const JobList = ({ jobs, onDelete, onRefresh }) => {
                                     })}
                                 </p>
                             </div>
-                            <button
-                                onClick={() => onDelete(job.id)}
-                                className="ml-4 p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition"
-                                title="Delete"
-                            >
-                                🗑️
-                            </button>
+
+                            <div className="flex items-center gap-2 ml-4">
+                                <span className={`text-slate-400 transition-transform duration-200 ${expandedId === job.id ? 'rotate-180' : ''}`}>
+                                    ▼
+                                </span>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onDelete(job.id); }}
+                                    className="p-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition"
+                                    title="Delete"
+                                >
+                                    🗑️
+                                </button>
+                            </div>
                         </div>
 
-                        {/* Required Skills */}
-                        {job.profile?.requiredSkills?.length > 0 && (
-                            <div className="mt-3 pt-3 border-t border-slate-700">
-                                <p className="text-slate-400 text-xs mb-2 font-medium">Required Skills:</p>
-                                <div className="flex flex-wrap gap-1.5">
-                                    {job.profile.requiredSkills.slice(0, 6).map((skill, idx) => (
-                                        <SkillTag key={idx} skill={skill} variant="required" />
-                                    ))}
-                                    {job.profile.requiredSkills.length > 6 && (
-                                        <span className="text-slate-500 text-xs px-2 py-1">
-                                            +{job.profile.requiredSkills.length - 6} more
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
+                        {/* Collapsed: Show first few skills */}
+                        {expandedId !== job.id && (
+                            <>
+                                {job.profile?.requiredSkills?.length > 0 && (
+                                    <div className="mt-3 pt-3 border-t border-slate-700">
+                                        <p className="text-slate-400 text-xs mb-2 font-medium">Required Skills:</p>
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {job.profile.requiredSkills.slice(0, 6).map((skill, idx) => (
+                                                <SkillTag key={idx} skill={skill} variant="required" />
+                                            ))}
+                                            {job.profile.requiredSkills.length > 6 && (
+                                                <span className="text-purple-400 text-xs px-2 py-1 bg-purple-500/10 rounded border border-purple-500/20 cursor-pointer hover:bg-purple-500/20 transition">
+                                                    +{job.profile.requiredSkills.length - 6} more — click to expand
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {job.profile?.preferredSkills?.length > 0 && (
+                                    <div className="mt-2">
+                                        <p className="text-slate-500 text-xs mb-1">Nice to have:</p>
+                                        <div className="flex flex-wrap gap-1">
+                                            {job.profile.preferredSkills.slice(0, 4).map((skill, idx) => (
+                                                <SkillTag key={idx} skill={skill} />
+                                            ))}
+                                            {job.profile.preferredSkills.length > 4 && (
+                                                <span className="text-slate-500 text-xs px-2 py-1">
+                                                    +{job.profile.preferredSkills.length - 4} more
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </>
                         )}
 
-                        {/* Preferred Skills */}
-                        {job.profile?.preferredSkills?.length > 0 && (
-                            <div className="mt-2">
-                                <p className="text-slate-500 text-xs mb-1">Nice to have:</p>
-                                <div className="flex flex-wrap gap-1">
-                                    {job.profile.preferredSkills.slice(0, 4).map((skill, idx) => (
-                                        <SkillTag key={idx} skill={skill} />
-                                    ))}
-                                    {job.profile.preferredSkills.length > 4 && (
-                                        <span className="text-slate-500 text-xs px-2 py-1">
-                                            +{job.profile.preferredSkills.length - 4} more
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
+                        {/* Expanded: Full Detail Panel */}
+                        {expandedId === job.id && (
+                            <JobDetail job={job} />
                         )}
                     </div>
                 ))}
