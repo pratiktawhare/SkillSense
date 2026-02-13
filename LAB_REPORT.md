@@ -146,9 +146,9 @@ To build professional UI with dark/light theme, sidebar navigation, and landing 
 - ☐ API Integration
 
 ## Work Done
-1. Implemented dark/light theme system with CSS variables and sidebar navigation layout
-2. Created animated public landing page and refactored Dashboard into nested route pages
-3. Added theme-aware styling overrides for all components ensuring proper visibility in both modes
+1. Implemented a professional UI with a dark/light theme system, sidebar navigation, and CSS variable-based styling
+2. Developed an animated public landing page and a nested dashboard layout for improved user experience
+3. Enhanced authentication pages (Login/Register) with glassmorphism effects, password visibility, and consistent branding
 
 ---
 
@@ -171,9 +171,9 @@ To implement role-based authentication and candidate self-service portal.
 - ☑ API Integration
 
 ## Work Done
-1. Added role-based auth (Recruiter/Candidate) with role guards and separate dashboards
-2. Built candidate portal with profile management, resume upload, job browsing, and application tracking
-3. Created public job board and application pipeline view for recruiters
+1. Implemented secure role-based authentication separating Recruiter and Candidate workflows
+2. Built Candidate Dashboard with job board, one-click apply, and application status tracking
+3. Created Recruiter Application Pipeline with seamless matching integration and step-wise applicant controls
 
 ---
 

@@ -185,24 +185,43 @@
 - SVG icons instead of emoji in navigation
 - Breadcrumbs on inner pages
 - Light mode: soft blue-gray background, visible card borders, dark text
+- ✨ **Login/Register Polish**: Matched theme with Landing page (animated orbs, glassmorphism), added password visibility toggle, and refined dynamic shadows.
 
 ---
 
-## ⏳ Part 7: Multi-Role Auth + Candidate Portal (NEXT)
+## ✅ Part 7: Multi-Role Auth + Candidate Portal (COMPLETE)
 
-### What Will Be Built
-- Role-based auth: Recruiter vs Candidate registration & login
-- Candidate self-service: profile, resume upload, browse jobs, apply
-- Application tracking: Applied → Screening → Shortlisted → Interview → Offered → Hired/Rejected
-- Recruiter pipeline view, application inbox
-- Public job board (no login required)
+### What Was Built
+- **Role-Based Access Control (RBAC)**: `recruiter` and `candidate` roles in User model
+- **Authentication Flow**: Role selection on Register, smart redirection on Login
+- **Candidate Portal**:
+  - `CandidateDashboard`: Personal overview with application stats
+  - `JobBoard`: Searchable public job listing with one-click apply
+  - `ApplicationTracker`: detailed pipeline history (Applied → Screening → Offered)
+  - `ResumeUpload`: Auto-associates resume with candidate profile
+- **Recruiter Portal**:
+  - `ApplicationPipeline`: View applicants per job, update statuses via dropdown
+- **Backend Infrastructure**:
+  - `Application` model with history tracking
+  - `requireRole` middleware to protect routes
+  - Public job endpoints for unauthenticated browsing
+  - **Matching Engine 2.0**: Unified resume sourcing (Process both manual uploads AND applicant resumes)
+  - **Enhanced Pipeline**: Step-by-step Advance/Reject/Restore workflow controls
 
-### What You'll See
-- 👤 **Role picker** on registration
-- 📋 **Candidate dashboard** with applications tracker
-- 🏢 **Recruiter dashboard** with application pipeline
-- 🌐 **Public job board** — browse jobs without login
-- 📊 **Status stepper** — visual application stage indicators
+### What You Can Test
+- Register a **Candidate** account (select "Candidate" toggle)
+- Browse jobs as a candidate and apply to positions
+- Log in as recruiter, see the application in "Applications" tab
+- Change status to "Interview" as recruiter
+- Check "My Applications" as candidate to see the status update
+- Verify public job board at `/candidate/jobs`
+
+### Visual Changes
+- New "Applications" item in sidebar (Recruiter)
+- Completely new Dashboard for Candidates
+- Job Board with search and "Apply" buttons
+- Status Stepper component (`Applied` → `Screening` → ...) 
+- Role toggle on Registration page
 
 ---
 
@@ -322,4 +341,4 @@ http://localhost:5173
 
 ---
 
-*Last updated: Part 6 Complete — Feb 13, 2026*
+*Last updated: UI Polish (Login/Register) — Feb 13, 2026*

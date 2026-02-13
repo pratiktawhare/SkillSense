@@ -2,6 +2,7 @@ const express = require('express');
 const Match = require('../models/Match');
 const Job = require('../models/Job');
 const Resume = require('../models/Resume');
+const Application = require('../models/Application');
 const auth = require('../middleware/auth');
 const { matchResumeToJob } = require('../services/matchingEngine');
 
@@ -21,8 +22,22 @@ router.post('/job/:jobId', auth, async (req, res) => {
             return res.status(404).json({ message: 'Job not found' });
         }
 
-        // Get all resumes for this recruiter
-        const resumes = await Resume.find({ recruiter: req.user._id });
+        // Get resumes from two sources:
+        // 1. Manually uploaded by this recruiter
+        // 2. Attached to applications for this specific job
+
+        // Find applications for this job
+        const applications = await Application.find({ jobId: job._id }).select('resumeId');
+        const applicantResumeIds = applications
+            .filter(app => app.resumeId)
+            .map(app => app.resumeId);
+
+        const resumes = await Resume.find({
+            $or: [
+                { recruiter: req.user._id },
+                { _id: { $in: applicantResumeIds } }
+            ]
+        });
 
         if (resumes.length === 0) {
             return res.json({ message: 'No resumes to match', matches: [], count: 0 });

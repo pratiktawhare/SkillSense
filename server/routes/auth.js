@@ -10,11 +10,11 @@ const generateToken = (userId) => {
 };
 
 // @route   POST /api/auth/register
-// @desc    Register a new recruiter
+// @desc    Register a new user (recruiter or candidate)
 // @access  Public
 router.post('/register', async (req, res) => {
     try {
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
 
         // Check if user exists
         const existingUser = await User.findOne({ email });
@@ -22,8 +22,12 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'User already exists with this email' });
         }
 
+        // Validate role
+        const validRoles = ['recruiter', 'candidate'];
+        const userRole = validRoles.includes(role) ? role : 'recruiter';
+
         // Create user
-        const user = await User.create({ name, email, password });
+        const user = await User.create({ name, email, password, role: userRole });
 
         // Generate token
         const token = generateToken(user._id);
@@ -33,7 +37,8 @@ router.post('/register', async (req, res) => {
             user: {
                 id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                role: user.role
             }
         });
     } catch (error) {
@@ -43,7 +48,7 @@ router.post('/register', async (req, res) => {
 });
 
 // @route   POST /api/auth/login
-// @desc    Login recruiter
+// @desc    Login user
 // @access  Public
 router.post('/login', async (req, res) => {
     try {
@@ -69,7 +74,8 @@ router.post('/login', async (req, res) => {
             user: {
                 id: user._id,
                 name: user.name,
-                email: user.email
+                email: user.email,
+                role: user.role
             }
         });
     } catch (error) {
@@ -86,7 +92,8 @@ router.get('/me', require('../middleware/auth'), async (req, res) => {
         user: {
             id: req.user._id,
             name: req.user.name,
-            email: req.user.email
+            email: req.user.email,
+            role: req.user.role
         }
     });
 });

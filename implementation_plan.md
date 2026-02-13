@@ -370,7 +370,7 @@ client/src/
 
 ---
 
-## PART 7: Multi-Role Authentication + Candidate Portal ⏳ PENDING
+## PART 7: Multi-Role Authentication + Candidate Portal ✅ COMPLETED
 
 ### Objective
 Add role-based auth (Recruiter vs Candidate). Candidates get a self-service portal to build profiles, browse jobs, and apply. Recruiters keep existing workflow plus new pipeline views.

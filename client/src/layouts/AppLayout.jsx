@@ -6,25 +6,30 @@ import Sidebar from '../components/Sidebar';
 const AppLayout = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-        return window.innerWidth < 1024;
-    });
+    // Initialize states based on window width
+    const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(() => window.innerWidth < 1024);
 
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
 
-    // Auto-collapse on resize
+    // Handle resize events
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 1024) {
+            const mobile = window.innerWidth < 1024;
+            setIsMobile(mobile);
+
+            // Auto-collapse on mobile if not already
+            if (mobile && !sidebarCollapsed) {
                 setSidebarCollapsed(true);
             }
         };
+
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, []);
+    }, [sidebarCollapsed]);
 
     return (
         <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
@@ -37,9 +42,7 @@ const AppLayout = () => {
             <div
                 className="transition-all duration-300"
                 style={{
-                    marginLeft: sidebarCollapsed
-                        ? (window.innerWidth >= 1024 ? 'var(--sidebar-collapsed)' : '0')
-                        : 'var(--sidebar-width)',
+                    marginLeft: isMobile ? '0' : (sidebarCollapsed ? '72px' : '260px')
                 }}
             >
                 {/* Header */}

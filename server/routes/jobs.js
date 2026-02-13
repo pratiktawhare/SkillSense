@@ -6,7 +6,65 @@ const { generateJobEmbedding } = require('../services/jobEmbedding');
 
 const router = express.Router();
 
-// @route   POST /api/jobs
+// ─── Public endpoints (no auth required) ───────────────────────────
+
+// @route   GET /api/jobs/public
+// @desc    Browse all jobs (public job board)
+// @access  Public
+router.get('/public', async (req, res) => {
+    try {
+        const jobs = await Job.find()
+            .select('title rawText profile createdAt recruiter')
+            .populate('recruiter', 'name')
+            .sort({ createdAt: -1 });
+
+        res.json(jobs.map(j => ({
+            id: j._id,
+            title: j.title,
+            descriptionPreview: j.rawText.substring(0, 200) + '...',
+            profile: j.profile ? {
+                requiredSkills: j.profile.requiredSkills || [],
+                preferredSkills: j.profile.preferredSkills || [],
+                totalYearsRequired: j.profile.totalYearsRequired || 0,
+                summary: j.profile.summary
+            } : null,
+            postedBy: j.recruiter?.name || 'Unknown',
+            createdAt: j.createdAt
+        })));
+    } catch (error) {
+        console.error('Public jobs error:', error);
+        res.status(500).json({ message: 'Error fetching jobs' });
+    }
+});
+
+// @route   GET /api/jobs/public/:id
+// @desc    View single job details (public)
+// @access  Public
+router.get('/public/:id', async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id)
+            .select('title rawText profile createdAt recruiter')
+            .populate('recruiter', 'name');
+
+        if (!job) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+
+        res.json({
+            id: job._id,
+            title: job.title,
+            rawText: job.rawText,
+            profile: job.profile,
+            postedBy: job.recruiter?.name || 'Unknown',
+            createdAt: job.createdAt
+        });
+    } catch (error) {
+        console.error('Public job detail error:', error);
+        res.status(500).json({ message: 'Error fetching job' });
+    }
+});
+
+// ─── Private endpoints (auth required) ─────────────────────────────
 // @desc    Create a new job description with auto-profiling
 // @access  Private
 router.post('/', auth, async (req, res) => {

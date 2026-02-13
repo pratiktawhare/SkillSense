@@ -48,7 +48,10 @@ export const jobAPI = {
     // Embedding endpoints
     generateEmbedding: (id) => api.post(`/jobs/${id}/embed`),
     getEmbeddingStatus: (id) => api.get(`/jobs/${id}/embedding-status`),
-    batchEmbed: () => api.post('/jobs/batch-embed')
+    batchEmbed: () => api.post('/jobs/batch-embed'),
+    // Public endpoints (no auth)
+    getPublicJobs: () => api.get('/jobs/public'),
+    getPublicJob: (id) => api.get(`/jobs/public/${id}`)
 };
 
 // Matching API
@@ -56,6 +59,14 @@ export const matchAPI = {
     runMatching: (jobId) => api.post(`/match/job/${jobId}`),
     getResults: (jobId) => api.get(`/match/job/${jobId}/results`),
     updateStatus: (matchId, status) => api.put(`/match/${matchId}/status`, { status })
+};
+
+// Application API
+export const applicationAPI = {
+    apply: (data) => api.post('/applications', data),
+    getMyApplications: () => api.get('/applications/my'),
+    getJobApplications: (jobId) => api.get(`/applications/job/${jobId}`),
+    updateStatus: (id, status) => api.put(`/applications/${id}/status`, { status })
 };
 
 export default api;

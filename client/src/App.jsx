@@ -11,10 +11,14 @@ import DashboardOverview from './pages/DashboardOverview';
 import ResumesPage from './pages/ResumesPage';
 import JobsPage from './pages/JobsPage';
 import MatchingPage from './pages/MatchingPage';
+import CandidateDashboard from './pages/CandidateDashboard';
+import JobBoard from './pages/JobBoard';
+import ApplicationTracker from './pages/ApplicationTracker';
+import ApplicationPipeline from './pages/ApplicationPipeline';
 import './index.css';
 
 // Protected route wrapper
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -25,7 +29,16 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  return user ? children : <Navigate to="/login" />;
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    // Redirect to correct dashboard based on actual role
+    return <Navigate to={user.role === 'candidate' ? '/candidate' : '/dashboard'} />;
+  }
+
+  return children;
 };
 
 // Public route wrapper (redirects to dashboard if logged in)
@@ -40,7 +53,11 @@ const PublicRoute = ({ children }) => {
     );
   }
 
-  return user ? <Navigate to="/dashboard" /> : children;
+  if (user) {
+    return <Navigate to={user.role === 'candidate' ? '/candidate' : '/dashboard'} />;
+  }
+
+  return children;
 };
 
 function App() {
@@ -71,10 +88,10 @@ function App() {
                 />
               </Route>
 
-              {/* Protected routes with sidebar layout */}
+              {/* Recruiter Routes */}
               <Route
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute allowedRoles={['recruiter']}>
                     <AppLayout />
                   </ProtectedRoute>
                 }
@@ -83,6 +100,21 @@ function App() {
                 <Route path="/dashboard/resumes" element={<ResumesPage />} />
                 <Route path="/dashboard/jobs" element={<JobsPage />} />
                 <Route path="/dashboard/matching" element={<MatchingPage />} />
+                <Route path="/dashboard/applications" element={<ApplicationPipeline />} />
+              </Route>
+
+              {/* Candidate Routes */}
+              <Route
+                element={
+                  <ProtectedRoute allowedRoles={['candidate']}>
+                    <AppLayout />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="/candidate" element={<CandidateDashboard />} />
+                <Route path="/candidate/jobs" element={<JobBoard />} />
+                <Route path="/candidate/applications" element={<ApplicationTracker />} />
+                <Route path="/candidate/resumes" element={<ResumesPage />} /> {/* Reusing ResumesPage for now, might need adaptation */}
               </Route>
 
               {/* Catch-all */}

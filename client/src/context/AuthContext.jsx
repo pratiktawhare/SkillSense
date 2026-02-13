@@ -39,8 +39,8 @@ export const AuthProvider = ({ children }) => {
         return response.data;
     };
 
-    const register = async (name, email, password) => {
-        const response = await authAPI.register({ name, email, password });
+    const register = async (name, email, password, role = 'recruiter') => {
+        const response = await authAPI.register({ name, email, password, role });
         localStorage.setItem('token', response.data.token);
         setUser(response.data.user);
         return response.data;
@@ -51,8 +51,11 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    const isRecruiter = user?.role === 'recruiter';
+    const isCandidate = user?.role === 'candidate';
+
     return (
-        <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+        <AuthContext.Provider value={{ user, loading, login, register, logout, isRecruiter, isCandidate }}>
             {children}
         </AuthContext.Provider>
     );

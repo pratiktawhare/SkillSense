@@ -1,9 +1,18 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { resumeAPI } from '../api';
+import { useAuth } from '../context/AuthContext';
 
 const ResumeUpload = ({ onUpload }) => {
+    const { user } = useAuth();
     const [candidateName, setCandidateName] = useState('');
     const [file, setFile] = useState(null);
+
+    useEffect(() => {
+        // Auto-fill name for candidates
+        if (user?.role === 'candidate' && user?.name && !candidateName) {
+            setCandidateName(user.name);
+        }
+    }, [user]);
     const [dragActive, setDragActive] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
@@ -104,10 +113,10 @@ const ResumeUpload = ({ onUpload }) => {
                         onDrop={handleDrop}
                         onClick={() => fileInputRef.current?.click()}
                         className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all ${dragActive
-                                ? 'border-purple-500 bg-purple-500/10'
-                                : file
-                                    ? 'border-green-500 bg-green-500/10'
-                                    : 'border-slate-600 hover:border-purple-500 hover:bg-slate-700/50'
+                            ? 'border-purple-500 bg-purple-500/10'
+                            : file
+                                ? 'border-green-500 bg-green-500/10'
+                                : 'border-slate-600 hover:border-purple-500 hover:bg-slate-700/50'
                             }`}
                     >
                         <input

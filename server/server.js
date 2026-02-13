@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth');
 const resumeRoutes = require('./routes/resumes');
 const jobRoutes = require('./routes/jobs');
 const matchingRoutes = require('./routes/matching');
+const applicationRoutes = require('./routes/applications');
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/resumes', resumeRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/match', matchingRoutes);
+app.use('/api/applications', applicationRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
