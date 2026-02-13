@@ -112,25 +112,52 @@
 
 ---
 
-## ⏳ Part 5: Matching Engine (NEXT)
+## ✅ Part 5: Resume-to-Role Matching Engine
 
-### What Will Be Built
+### What Was Built
 - Resume-to-job semantic matching using cosine similarity
-- Skill overlap analysis (exact + semantic matches)
-- Experience compatibility scoring
-- Weighted final score (semantic 40% + skills 40% + experience 20%)
-- Match interpretation in plain English
-- Shortlist / reject actions
+- Skill overlap analysis (exact matches + missing + bonus detection)
+- Experience compatibility scoring (with overqualified handling)
+- Weighted final score: Semantic (40%) + Skills (40%) + Experience (20%)
+- Human-readable match interpretation with tier system
+- Shortlist / reject / reset quick actions per candidate
+- Match persistence in database (upsert on re-match)
 
-### What You'll See
-- 🎯 Match scores (0-100%) with animated circular gauge
-- 📊 Score breakdown (semantic / skill / experience bars)
-- ✅⚠️🎁 Skill matrix (matched / missing / bonus skills)
-- 🎯 New "Matching" tab in navigation
+### What You Can Test
+1. **Go to Matching tab** → Click "🎯 Matching" in the navigation
+2. **Select a job** → Only jobs with "AI Ready" status are shown
+3. **Click "Run Matching"** → All uploaded resumes are matched against the job
+4. **View score gauge** → Animated circular dial shows match percentage (0-100%)
+5. **Expand a match card** → Click to see full score breakdown and skill matrix
+6. **Score breakdown** → See Semantic, Skill Match, and Experience bars with weights and point contributions
+7. **Skill matrix** → See matched (✓), missing (✗), and bonus (+) skills with coverage bar
+8. **Shortlist/reject** → Click 👍/👎 to update candidate status
+9. **Filter candidates** → Use filter tabs: All, Shortlisted, Pending, Rejected
+10. **Score distribution** → See visual bar showing Excellent/Good/Partial/Weak distribution
+11. **Re-match** → Click "Re-match" to recalculate after uploading new resumes
+
+### Visual Changes
+- 🎯 **New "Matching" tab** in the dashboard navigation (gradient button)
+- 🔵 **Job selector cards** with AI Ready badge and skill count
+- 📊 **Score gauge dials** — animated circular gauges for average and top scores
+- 🏆🥈🥉 **Rank badges** — gold, silver, bronze for top 3 candidates
+- 📊 **Score breakdown** — horizontal bars with weight indicators and point contributions
+- ✅❌🎁 **Skill matrix** — matched/missing/bonus skills with color-coded category pills and coverage bar
+- 🟢🔵🟡🔴 **Score distribution bar** — visual breakdown of candidate quality tiers
+- 👍👎 **Quick action buttons** — shortlist, reject, reset per candidate
+- 🏷️ **Tier badges** — Excellent (🏆), Good (✅), Partial (⚠️), Weak (❌)
+- 📋 **Filter tabs** with real-time counts
+
+### Behind the Scenes
+- Matching uses cosine similarity between 384-dim embedding vectors
+- Skill matching uses normalized name comparison with category awareness
+- Experience fit: ratio of candidate years to required years, capped at 1.2x
+- Results cached in Match collection with unique constraint per resume+job pair
+- Standalone `ScoreBreakdown` and `SkillMatrix` components ready for reuse in Parts 8-9
 
 ---
 
-## ⏳ Part 6: Exaggeration Detection
+## ⏳ Part 6: Exaggeration Detection (NEXT)
 
 ### What Will Be Built
 - Technology age validation (can't have 15 years of React)
@@ -250,6 +277,9 @@
 | ⭐ Required | This skill is required for the job |
 | 📊 Profile % | Profile completeness score |
 | 🔵🟣🟢🟠 Tags | Skill categories (programming, frontend, etc.) |
+| 🏆✅⚠️❌ Tiers | Match quality: Excellent/Good/Partial/Weak |
+| 👍👎 Actions | Shortlist or reject a candidate |
+| 📊 Score Bars | Semantic, Skill, Experience breakdown |
 
 ---
 
@@ -268,8 +298,10 @@ http://localhost:5173
 # 4. Upload resumes and create jobs
 
 # 5. Click cards to expand and see full details!
+
+# 6. Go to Matching tab → Select a job → Run Matching!
 ```
 
 ---
 
-*Last updated: Part 4 Complete — Feb 11, 2026*
+*Last updated: Part 5 Complete — Feb 13, 2026*

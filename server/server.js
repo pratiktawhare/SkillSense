@@ -7,6 +7,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const resumeRoutes = require('./routes/resumes');
 const jobRoutes = require('./routes/jobs');
+const matchingRoutes = require('./routes/matching');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/resumes', resumeRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/match', matchingRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -51,4 +51,11 @@ export const jobAPI = {
     batchEmbed: () => api.post('/jobs/batch-embed')
 };
 
+// Matching API
+export const matchAPI = {
+    runMatching: (jobId) => api.post(`/match/job/${jobId}`),
+    getResults: (jobId) => api.get(`/match/job/${jobId}/results`),
+    updateStatus: (matchId, status) => api.put(`/match/${matchId}/status`, { status })
+};
+
 export default api;

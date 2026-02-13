@@ -5,6 +5,7 @@ import ResumeUpload from '../components/ResumeUpload';
 import ResumeList from '../components/ResumeList';
 import JobForm from '../components/JobForm';
 import JobList from '../components/JobList';
+import MatchingView from './MatchingView';
 import { resumeAPI, jobAPI } from '../api';
 
 const Dashboard = () => {
@@ -130,6 +131,15 @@ const Dashboard = () => {
                     >
                         💼 Jobs ({jobs.length})
                     </button>
+                    <button
+                        onClick={() => setActiveTab('matching')}
+                        className={`px-6 py-3 rounded-lg font-medium transition-all ${activeTab === 'matching'
+                            ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/25'
+                            : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                            }`}
+                    >
+                        🎯 Matching
+                    </button>
                 </div>
 
                 {/* Content */}
@@ -138,27 +148,31 @@ const Dashboard = () => {
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {activeTab === 'resumes' ? (
-                            <>
-                                <div className="lg:col-span-1">
-                                    <ResumeUpload onUpload={handleResumeUpload} />
-                                </div>
-                                <div className="lg:col-span-2">
-                                    <ResumeList resumes={resumes} onDelete={handleResumeDelete} onRefresh={refreshResumes} />
-                                </div>
-                            </>
-                        ) : (
-                            <>
-                                <div className="lg:col-span-1">
-                                    <JobForm onSubmit={handleJobCreate} />
-                                </div>
-                                <div className="lg:col-span-2">
-                                    <JobList jobs={jobs} onDelete={handleJobDelete} onRefresh={refreshJobs} />
-                                </div>
-                            </>
-                        )}
-                    </div>
+                    activeTab === 'matching' ? (
+                        <MatchingView />
+                    ) : (
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            {activeTab === 'resumes' ? (
+                                <>
+                                    <div className="lg:col-span-1">
+                                        <ResumeUpload onUpload={handleResumeUpload} />
+                                    </div>
+                                    <div className="lg:col-span-2">
+                                        <ResumeList resumes={resumes} onDelete={handleResumeDelete} onRefresh={refreshResumes} />
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <div className="lg:col-span-1">
+                                        <JobForm onSubmit={handleJobCreate} />
+                                    </div>
+                                    <div className="lg:col-span-2">
+                                        <JobList jobs={jobs} onDelete={handleJobDelete} onRefresh={refreshJobs} />
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    )
                 )}
             </main>
         </div>

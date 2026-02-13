@@ -22,11 +22,15 @@ An intelligent recruitment platform that uses semantic AI to match candidates wi
 - 📊 **Profile Completeness** — Weighted quality scoring for each resume
 - 🔄 **Background Processing** — Embeddings generated asynchronously
 - 📋 **Expandable Cards** — Click resume/job cards to see full details, skills grouped by category
+- 🎯 **Smart Matching** — Semantic similarity + skill overlap + experience scoring with weighted algorithm
+- 📊 **Score Breakdown** — Visual bars showing Semantic (40%), Skills (40%), Experience (20%) contribution
+- 🏆 **Candidate Ranking** — Ranked results with gold/silver/bronze badges and tier classification
+- ✅❌🎁 **Skill Matrix** — Matched, missing, and bonus skills with coverage bar
+- 👍👎 **Quick Actions** — Shortlist, reject, and reset candidate status
 
 ### Upcoming 🚧
-- 🎯 **Smart Matching** — Semantic similarity + skill overlap + experience scoring
 - ⚠️ **Exaggeration Detection** — Flag unrealistic claims with credibility scoring
-- 🏆 **Candidate Ranking** — Stability analysis and sensitivity testing
+- 📊 **Stability Analysis** — Sensitivity testing and "what-if" scenarios
 - 📈 **Analytics Dashboard** — Stats cards, charts, and activity feeds
 - 👤 **Candidate Profiles** — Full detail pages with match history
 - ⚖️ **Side-by-Side Compare** — Compare 2-3 candidates visually
@@ -110,17 +114,22 @@ SkillSense/
 │   ├── models/                # Mongoose schemas
 │   │   ├── User.js            # Recruiter accounts
 │   │   ├── Resume.js          # Resumes + embeddings
-│   │   └── Job.js             # Jobs + embeddings
+│   │   ├── Job.js             # Jobs + embeddings
+│   │   └── Match.js           # Match scores + skill analysis
 │   ├── routes/                # API endpoints
 │   │   ├── auth.js            # Register/Login
 │   │   ├── resumes.js         # Resume CRUD + embedding
-│   │   └── jobs.js            # Job CRUD + embedding
+│   │   ├── jobs.js            # Job CRUD + embedding
+│   │   └── matching.js        # Run matching + results + status
 │   ├── services/              # Business logic
 │   │   ├── profiler.js        # Skill/experience extraction
-│   │   ├── skillNormalizer.js # 90+ alias mapping
+│   │   ├── skillNormalizer.js  # 90+ alias mapping
 │   │   ├── huggingFaceClient.js # Transformers.js wrapper
 │   │   ├── jobEmbedding.js    # Job embedding generation
-│   │   └── resumeEmbedding.js # Resume embedding + completeness
+│   │   ├── resumeEmbedding.js # Resume embedding + completeness
+│   │   ├── matchingEngine.js  # Core matching algorithm
+│   │   ├── skillOverlap.js    # Skill overlap analysis utilities
+│   │   └── interpretationGenerator.js # Match explanations
 │   └── server.js              # Express entry point
 ├── client/                    # React frontend
 │   ├── src/
@@ -128,11 +137,16 @@ SkillSense/
 │   │   │   ├── ResumeUpload.jsx
 │   │   │   ├── ResumeList.jsx # Expandable resume cards
 │   │   │   ├── JobForm.jsx
-│   │   │   └── JobList.jsx    # Expandable job cards
+│   │   │   ├── JobList.jsx    # Expandable job cards
+│   │   │   ├── MatchCard.jsx  # Match result card with actions
+│   │   │   ├── ScoreGauge.jsx # Animated circular score dial
+│   │   │   ├── ScoreBreakdown.jsx # Score component bars
+│   │   │   └── SkillMatrix.jsx # Skill match visualization
 │   │   ├── pages/             # Page components
 │   │   │   ├── Login.jsx
 │   │   │   ├── Register.jsx
-│   │   │   └── Dashboard.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   └── MatchingView.jsx # Matching page
 │   │   ├── context/AuthContext.jsx
 │   │   └── api.js             # Axios API client
 │   └── index.html
@@ -184,6 +198,13 @@ JWT_SECRET=your_secret_key
 | GET | `/api/jobs/:id/embedding-status` | Check embedding status |
 | POST | `/api/jobs/batch-embed` | Batch embed all pending |
 
+### Matching
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/match/job/:jobId` | Run matching for all resumes against a job |
+| GET | `/api/match/job/:jobId/results` | Get cached match results |
+| PUT | `/api/match/:matchId/status` | Update status (shortlist/reject/pending) |
+
 ## 🎯 Implementation Progress
 
 | Part | Description | Status |
@@ -192,7 +213,7 @@ JWT_SECRET=your_secret_key
 | 2 | Resume/Job Profiling | ✅ Complete |
 | 3 | Job Embeddings (Transformers.js) | ✅ Complete |
 | 4 | Resume Embeddings + Completeness | ✅ Complete |
-| 5 | Matching Engine | ⏳ Pending |
+| 5 | Matching Engine | ✅ Complete |
 | 6 | Exaggeration Detection | ⏳ Pending |
 | 7 | Ranking + Stability | ⏳ Pending |
 | 8 | Analytics Dashboard | ⏳ Pending |

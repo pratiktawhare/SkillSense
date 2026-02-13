@@ -121,9 +121,9 @@ To match resumes with jobs using semantic similarity and skill analysis.
 - ☐ API Integration
 
 ## Work Done
-1. Implemented cosine similarity matching with weighted scoring algorithm
-2. Built skill overlap analysis with exact, semantic, and missing skill detection
-3. Created matching page with score gauges, breakdowns, and shortlist actions
+1. Built matching engine combining cosine similarity (40%), skill overlap (40%), and experience fit (20%) into weighted match scores
+2. Created Match model with score persistence, skill analysis, and recruiter workflow status (shortlist/reject/pending)
+3. Developed MatchingView page with job selector, animated ScoreGauge dials, ScoreBreakdown bars, SkillMatrix grid, score distribution chart, and candidate filter tabs
 
 ---
 
