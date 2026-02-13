@@ -157,112 +157,130 @@
 
 ---
 
-## ⏳ Part 6: Exaggeration Detection (NEXT)
+## ✅ Part 6: Professional UI + Theme + Landing (COMPLETE)
 
-### What Will Be Built
-- Technology age validation (can't have 15 years of React)
-- Expert overload detection (too many "expert" claims)
-- Career consistency checks (overlapping roles)
-- Credibility scoring with penalty system
+### What Was Built
+- Dark/Light theme system (`ThemeContext`) with CSS variables, localStorage persistence, and system preference detection
+- Professional collapsible sidebar navigation with SVG icons (no emoji), active route highlighting, mobile overlay
+- Animated public landing page with hero section, feature cards, how-it-works steps, tech stack badges, footer
+- Professional design tokens: Inter font, muted color palette, subtle shadows, 8px corners
+- Skeleton loaders, empty states, error boundary with retry, breadcrumb navigation
+- Dashboard refactored into nested routes: Overview, Resumes, Jobs, Matching pages
+- App.jsx rewritten: Landing at `/`, protected routes under `/dashboard/*`
+- Light mode CSS overrides for all legacy components (cards, inputs, text, borders, skill tags)
+- Dimmed light-mode palette (no pure white) with visible card contrast
 
-### What You'll See
-- ⚠️ Red flag warnings on suspicious claims
-- 📊 Credibility score per resume
-- 🔍 Detailed analysis of flagged items
+### What You Can Test
+- Visit `/` to see the landing page
+- Click the theme toggle (sun/moon icon) in sidebar to switch dark/light mode
+- Sign in and see the sidebar navigation
+- Navigate between Dashboard, Resumes, Jobs, and Matching pages
+- Resize browser to see mobile sidebar behavior
+- Switch to light mode and verify all cards, inputs, and text are clearly readable
 
----
-
-## ⏳ Part 7: Ranking & Stability
-
-### What Will Be Built
-- Multi-factor ranking algorithm
-- Stability/sensitivity analysis ("what if" scenarios)
-- Rank consistency checks
-
-### What You'll See
-- 🏆 Ranked candidate lists per job
-- 🟢🟡🔴 Stability indicators
-- 📊 "What if you added Docker?" scenario testing
-
----
-
-## ⏳ Part 8: Analytics Dashboard
-
-### What Will Be Built
-- Overview stats cards with animated counters
-- Interactive ranking table with sort/filter
-- Skill gap analysis visualization
-- Match quality distribution charts
-- Activity feed timeline
-
-### What You'll See
-- 📊 Dashboard with key metrics at a glance
-- 📈 Charts showing score distributions
-- 🗂️ Interactive tables with bulk actions
+### Visual Changes
+- Professional sidebar replaces top tabs
+- Landing page at root URL
+- Dark/light theme toggle throughout
+- SVG icons instead of emoji in navigation
+- Breadcrumbs on inner pages
+- Light mode: soft blue-gray background, visible card borders, dark text
 
 ---
 
-## ⏳ Part 9: Candidate Detail + Comparison
+## ⏳ Part 7: Multi-Role Auth + Candidate Portal (NEXT)
 
 ### What Will Be Built
-- Full candidate profile page
-- Side-by-side comparison (2-3 candidates)
+- Role-based auth: Recruiter vs Candidate registration & login
+- Candidate self-service: profile, resume upload, browse jobs, apply
+- Application tracking: Applied → Screening → Shortlisted → Interview → Offered → Hired/Rejected
+- Recruiter pipeline view, application inbox
+- Public job board (no login required)
+
+### What You'll See
+- 👤 **Role picker** on registration
+- 📋 **Candidate dashboard** with applications tracker
+- 🏢 **Recruiter dashboard** with application pipeline
+- 🌐 **Public job board** — browse jobs without login
+- 📊 **Status stepper** — visual application stage indicators
+
+---
+
+## ⏳ Part 8: Exaggeration Detection + Credibility
+
+### What Will Be Built
+- Technology age validation, expert overload detection
+- Career consistency checks, skill-experience mismatch detection
+- 0-100 credibility score with penalty tiers
+- Fair comparison mode for incomplete profiles
+
+### What You'll See
+- 🛡️ **Credibility badge** (High / Medium / Low) on resume cards
+- 🚩 **Red flag panel** with detailed explanations
+- 📉 **Impact indicator** showing score reductions
+
+---
+
+## ⏳ Part 9: Ranking, Stability & Comparison
+
+### What Will Be Built
+- Multi-factor ranking with stability analysis
+- "What if" sensitivity testing
+- Side-by-side candidate comparison (2-3 candidates)
 - Skill radar/spider chart
-- Match history across jobs
-- Recruiter notes & annotations
+- Recruiter notes & annotation system
 
 ### What You'll See
-- 👤 Detailed candidate pages with all data
-- ⚖️ Side-by-side comparison grids
-- 📝 Private recruiter notes per candidate
+- 🏆 **Ranked candidate lists** with movement indicators
+- 🟢🟡🔴 **Stability badges** per candidate
+- ⚖️ **Side-by-side comparison** view
+- 📝 **Note editor** with quick templates
 
 ---
 
-## ⏳ Part 10: Notifications + Settings
+## ⏳ Part 10: Analytics Dashboard
 
 ### What Will Be Built
-- Toast notification system
-- Notification bell with dropdown
-- Settings page (profile, matching weights, theme)
-- Custom weight sliders for matching algorithm
+- KPI overview cards with animated counters
+- Score distribution charts, skill gap analysis
+- Hiring funnel visualization
+- Activity timeline, interactive ranking table
 
 ### What You'll See
-- 🔔 Notification bell in header
-- ⚙️ Settings page with weight customization
-- 🎨 Theme toggle (dark/light)
+- 📊 **Dashboard** with stats cards and charts
+- 📈 **Hiring funnel** — visual pipeline metrics
+- 🗂️ **Interactive tables** with sort, filter, bulk actions
 
 ---
 
-## ⏳ Part 11: Export, Reports & Batch Ops
+## ⏳ Part 11: Notifications, Settings & Communication
 
 ### What Will Be Built
-- PDF report generation per job
-- CSV export for rankings
+- Toast notification system with auto-dismiss
+- Notification center with bell icon and unread count
+- Settings page (profile, matching weights, theme, notification preferences)
+- In-app status messages between recruiter and candidate
+
+### What You'll See
+- 🔔 **Notification bell** with dropdown
+- ⚙️ **Settings page** with weight sliders
+- 💬 **Status messages** on application updates
+
+---
+
+## ⏳ Part 12: Export, Batch Ops & Final Polish
+
+### What Will Be Built
+- PDF/CSV report generation and download
 - Batch operations (bulk delete, embed, shortlist)
-- Multi-file upload (multiple PDFs at once)
+- Multi-file upload, global search (Ctrl+K)
+- Job management (archive, duplicate, edit)
+- Mobile responsive, keyboard navigation, 404 page
 
 ### What You'll See
-- 📄 Downloadable PDF reports
-- 📊 CSV spreadsheet export
-- 📤 Multi-file drag-and-drop upload
-
----
-
-## ⏳ Part 12: Landing Page + Sidebar + Final Polish
-
-### What Will Be Built
-- Animated public landing page
-- Sidebar navigation (replacing top tabs)
-- Loading skeletons & empty states
-- Keyboard shortcuts (Ctrl+K search)
-- Mobile responsive design
-- Error boundaries
-
-### What You'll See
-- 🚀 Beautiful animated landing page
-- 📱 Professional sidebar navigation
-- ⌨️ Keyboard shortcuts
-- 📱 Mobile-friendly layout
+- 📄 **Downloadable PDF/CSV** reports
+- ⌨️ **Command palette** search (Ctrl+K)
+- 📤 **Multi-file drag-and-drop** upload
 
 ---
 
@@ -304,4 +322,4 @@ http://localhost:5173
 
 ---
 
-*Last updated: Part 5 Complete — Feb 13, 2026*
+*Last updated: Part 6 Complete — Feb 13, 2026*

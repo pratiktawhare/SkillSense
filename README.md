@@ -17,7 +17,7 @@ An intelligent recruitment platform that uses semantic AI to match candidates wi
 - 📄 **PDF Resume Parsing** — Upload PDF resumes with automatic text extraction
 - 🧠 **AI-Powered Profiling** — Extract skills, experience, and education using NLP
 - 🏷️ **Skill Normalization** — 90+ skill aliases mapped to canonical forms with categories
-- 🎨 **Beautiful UI** — Modern glassmorphism design with Tailwind CSS
+- 🎨 **Professional UI** — Dark/light theme with CSS variables, Inter font, sidebar navigation
 - 🤖 **Semantic Embeddings** — 384-dimensional vectors for jobs and resumes (local, no API key)
 - 📊 **Profile Completeness** — Weighted quality scoring for each resume
 - 🔄 **Background Processing** — Embeddings generated asynchronously
@@ -27,17 +27,21 @@ An intelligent recruitment platform that uses semantic AI to match candidates wi
 - 🏆 **Candidate Ranking** — Ranked results with gold/silver/bronze badges and tier classification
 - ✅❌🎁 **Skill Matrix** — Matched, missing, and bonus skills with coverage bar
 - 👍👎 **Quick Actions** — Shortlist, reject, and reset candidate status
+- 🌓 **Dark/Light Theme** — Toggle with system preference detection and localStorage persistence
+- 📐 **Sidebar Navigation** — Collapsible sidebar with SVG icons, mobile overlay
+- 🏠 **Landing Page** — Animated public landing page with feature cards, tech stack, how-it-works
 
 ### Upcoming 🚧
+- 👥 **Multi-Role Auth** — Separate Recruiter and Candidate experiences
+- 📋 **Candidate Portal** — Self-service profile, job browsing, and application tracking
 - ⚠️ **Exaggeration Detection** — Flag unrealistic claims with credibility scoring
 - 📊 **Stability Analysis** — Sensitivity testing and "what-if" scenarios
 - 📈 **Analytics Dashboard** — Stats cards, charts, and activity feeds
-- 👤 **Candidate Profiles** — Full detail pages with match history
 - ⚖️ **Side-by-Side Compare** — Compare 2-3 candidates visually
 - 🔔 **Notifications** — Toast alerts and notification center
 - ⚙️ **Settings** — Matching weight customization and theme toggle
 - 📥 **Export Reports** — PDF and CSV export for matching results
-- 🚀 **Landing Page** — Animated public landing page with sidebar navigation
+- ⌨️ **Global Search** — Ctrl+K command palette
 
 ## 🛠️ Tech Stack
 
@@ -50,8 +54,8 @@ An intelligent recruitment platform that uses semantic AI to match candidates wi
 
 ### Frontend
 - **Framework:** React 18 + Vite (fast dev server)
-- **Styling:** Tailwind CSS 3 with custom glassmorphism theme
-- **Routing:** React Router v6
+- **Styling:** Tailwind CSS 4 + CSS variables theme system (dark/light)
+- **Routing:** React Router v6 with nested layouts
 - **HTTP Client:** Axios with JWT interceptor
 
 ### AI / NLP
@@ -134,6 +138,11 @@ SkillSense/
 ├── client/                    # React frontend
 │   ├── src/
 │   │   ├── components/        # UI components
+│   │   │   ├── Sidebar.jsx    # Collapsible sidebar navigation
+│   │   │   ├── Breadcrumb.jsx # Auto-generated breadcrumbs
+│   │   │   ├── SkeletonLoader.jsx # Loading placeholders
+│   │   │   ├── EmptyState.jsx # Empty data display
+│   │   │   ├── ErrorBoundary.jsx # Crash recovery
 │   │   │   ├── ResumeUpload.jsx
 │   │   │   ├── ResumeList.jsx # Expandable resume cards
 │   │   │   ├── JobForm.jsx
@@ -142,12 +151,21 @@ SkillSense/
 │   │   │   ├── ScoreGauge.jsx # Animated circular score dial
 │   │   │   ├── ScoreBreakdown.jsx # Score component bars
 │   │   │   └── SkillMatrix.jsx # Skill match visualization
+│   │   ├── layouts/           # Layout wrappers
+│   │   │   ├── AppLayout.jsx  # Sidebar + header + content
+│   │   │   └── PublicLayout.jsx # Public pages wrapper
 │   │   ├── pages/             # Page components
+│   │   │   ├── Landing.jsx    # Public landing page
 │   │   │   ├── Login.jsx
 │   │   │   ├── Register.jsx
-│   │   │   ├── Dashboard.jsx
-│   │   │   └── MatchingView.jsx # Matching page
-│   │   ├── context/AuthContext.jsx
+│   │   │   ├── DashboardOverview.jsx # Stats + quick actions
+│   │   │   ├── ResumesPage.jsx # Resume management
+│   │   │   ├── JobsPage.jsx   # Job management
+│   │   │   ├── MatchingPage.jsx # Matching wrapper
+│   │   │   └── MatchingView.jsx # Matching engine UI
+│   │   ├── context/
+│   │   │   ├── AuthContext.jsx # Authentication state
+│   │   │   └── ThemeContext.jsx # Dark/light theme state
 │   │   └── api.js             # Axios API client
 │   └── index.html
 ├── implementation_plan.md     # Full 12-part development plan
@@ -214,13 +232,13 @@ JWT_SECRET=your_secret_key
 | 3 | Job Embeddings (Transformers.js) | ✅ Complete |
 | 4 | Resume Embeddings + Completeness | ✅ Complete |
 | 5 | Matching Engine | ✅ Complete |
-| 6 | Exaggeration Detection | ⏳ Pending |
-| 7 | Ranking + Stability | ⏳ Pending |
-| 8 | Analytics Dashboard | ⏳ Pending |
-| 9 | Candidate Detail + Comparison | ⏳ Pending |
-| 10 | Notifications + Settings | ⏳ Pending |
-| 11 | Export, Reports & Batch Ops | ⏳ Pending |
-| 12 | Landing Page + Sidebar + Polish | ⏳ Pending |
+| 6 | Professional UI + Theme + Landing | ✅ Complete |
+| 7 | Multi-Role Auth + Candidate Portal | ⏳ Next |
+| 8 | Exaggeration Detection + Credibility | ⏳ Pending |
+| 9 | Ranking, Stability & Comparison | ⏳ Pending |
+| 10 | Analytics Dashboard | ⏳ Pending |
+| 11 | Notifications, Settings & Communication | ⏳ Pending |
+| 12 | Export, Batch Ops & Final Polish | ⏳ Pending |
 
 ## 📄 License
 

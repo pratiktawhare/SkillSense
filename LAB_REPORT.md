@@ -133,22 +133,22 @@ To match resumes with jobs using semantic similarity and skill analysis.
 **AI-Based Resume and Job Profiling System**
 
 ## Objective
-To detect exaggerated or unrealistic skill claims in resumes.
+To build professional UI with dark/light theme, sidebar navigation, and landing page.
 
 ## Title of Work Performed
-**Implementation of Exaggeration Detection and Credibility Scoring**
+**Implementation of Professional UI Overhaul, Theme System, and Landing Page**
 
 ## Project Parameters Involved
-- ☐ Frontend
-- ☑ Backend
-- ☑ Database
-- ☑ Machine Learning / AI
+- ☑ Frontend
+- ☐ Backend
+- ☐ Database
+- ☐ Machine Learning / AI
 - ☐ API Integration
 
 ## Work Done
-1. Developed pattern-based detection for unrealistic skill claims
-2. Generated credibility scores based on experience-skill consistency
-3. Applied scoring penalties and flagged suspicious resumes
+1. Implemented dark/light theme system with CSS variables and sidebar navigation layout
+2. Created animated public landing page and refactored Dashboard into nested route pages
+3. Added theme-aware styling overrides for all components ensuring proper visibility in both modes
 
 ---
 
@@ -158,22 +158,22 @@ To detect exaggerated or unrealistic skill claims in resumes.
 **AI-Based Resume and Job Profiling System**
 
 ## Objective
-To create fair and stable ranking for candidate evaluation.
+To implement role-based authentication and candidate self-service portal.
 
 ## Title of Work Performed
-**Implementation of Ranking Algorithm with Stability Analysis**
+**Implementation of Multi-Role Authentication and Candidate Portal**
 
 ## Project Parameters Involved
 - ☑ Frontend
 - ☑ Backend
 - ☑ Database
-- ☑ Machine Learning / AI
-- ☐ API Integration
+- ☐ Machine Learning / AI
+- ☑ API Integration
 
 ## Work Done
-1. Built multi-factor ranking algorithm with weighted scoring
-2. Implemented stability/sensitivity analysis for rank consistency
-3. Added "what-if" scenario testing for skill additions
+1. Added role-based auth (Recruiter/Candidate) with role guards and separate dashboards
+2. Built candidate portal with profile management, resume upload, job browsing, and application tracking
+3. Created public job board and application pipeline view for recruiters
 
 ---
 
@@ -183,7 +183,57 @@ To create fair and stable ranking for candidate evaluation.
 **AI-Based Resume and Job Profiling System**
 
 ## Objective
-To build analytics dashboard with visualizations and professional UI.
+To detect exaggerated or unrealistic skill claims and produce credibility scores.
+
+## Title of Work Performed
+**Implementation of Exaggeration Detection and Credibility Scoring**
+
+## Project Parameters Involved
+- ☑ Frontend
+- ☑ Backend
+- ☑ Database
+- ☑ Machine Learning / AI
+- ☐ API Integration
+
+## Work Done
+1. Developed pattern-based detection for unrealistic skill claims with technology age validation
+2. Generated 0-100 credibility scores with penalty tiers and fair comparison mode
+3. Created credibility badges and red flag panels on resume cards
+
+---
+
+# PART 9
+
+## Title of Project
+**AI-Based Resume and Job Profiling System**
+
+## Objective
+To create stable rankings and side-by-side candidate comparison.
+
+## Title of Work Performed
+**Implementation of Candidate Ranking, Stability Analysis, and Comparison Module**
+
+## Project Parameters Involved
+- ☑ Frontend
+- ☑ Backend
+- ☑ Database
+- ☑ Machine Learning / AI
+- ☐ API Integration
+
+## Work Done
+1. Built multi-factor ranking algorithm with stability analysis and sensitivity testing
+2. Created side-by-side comparison view with skill radar charts
+3. Implemented recruiter notes and annotation system per candidate
+
+---
+
+# PART 10
+
+## Title of Project
+**AI-Based Resume and Job Profiling System**
+
+## Objective
+To build comprehensive analytics dashboard with KPIs and visualizations.
 
 ## Title of Work Performed
 **Implementation of Analytics Dashboard and Data Visualization**
@@ -196,59 +246,9 @@ To build analytics dashboard with visualizations and professional UI.
 - ☐ API Integration
 
 ## Work Done
-1. Created interactive dashboard with stats cards and animated counters
-2. Built ranking tables with sort, filter, and bulk action support
-3. Implemented skill gap analysis and match quality distribution charts
-
----
-
-# PART 9
-
-## Title of Project
-**AI-Based Resume and Job Profiling System**
-
-## Objective
-To build candidate detail pages and side-by-side comparison views.
-
-## Title of Work Performed
-**Implementation of Candidate Profiles and Comparison Module**
-
-## Project Parameters Involved
-- ☑ Frontend
-- ☑ Backend
-- ☑ Database
-- ☐ Machine Learning / AI
-- ☐ API Integration
-
-## Work Done
-1. Created full candidate profile page with skills, experience, and match history
-2. Built side-by-side comparison view for evaluating multiple candidates
-3. Implemented recruiter notes and annotation system
-
----
-
-# PART 10
-
-## Title of Project
-**AI-Based Resume and Job Profiling System**
-
-## Objective
-To add notification system, settings page, and user preferences.
-
-## Title of Work Performed
-**Implementation of Notifications, Settings, and Personalization**
-
-## Project Parameters Involved
-- ☑ Frontend
-- ☑ Backend
-- ☑ Database
-- ☐ Machine Learning / AI
-- ☐ API Integration
-
-## Work Done
-1. Built toast notification system and notification center with bell dropdown
-2. Created settings page with profile editing and matching weight sliders
-3. Implemented theme toggle and user preference persistence
+1. Created KPI overview cards with animated counters and trend indicators
+2. Built score distribution, skill gap analysis, and hiring funnel charts using Recharts
+3. Implemented interactive ranking table with sort, filter, and bulk actions
 
 ---
 
@@ -258,22 +258,22 @@ To add notification system, settings page, and user preferences.
 **AI-Based Resume and Job Profiling System**
 
 ## Objective
-To enable report generation, data export, and batch operations.
+To add notification system, user settings, and in-app communication.
 
 ## Title of Work Performed
-**Implementation of Export, Reports, and Batch Data Management**
+**Implementation of Notifications, Settings, and Communication**
 
 ## Project Parameters Involved
 - ☑ Frontend
 - ☑ Backend
-- ☐ Database
+- ☑ Database
 - ☐ Machine Learning / AI
 - ☐ API Integration
 
 ## Work Done
-1. Implemented PDF report generation for job matching results
-2. Built CSV export for ranking tables and candidate data
-3. Created batch operations for bulk embedding, deletion, and multi-file upload
+1. Built toast notification system with auto-dismiss and notification center with bell dropdown
+2. Created settings page with profile editing, matching weight sliders, and theme preferences
+3. Implemented in-app status messages for application updates
 
 ---
 
@@ -283,22 +283,22 @@ To enable report generation, data export, and batch operations.
 **AI-Based Resume and Job Profiling System**
 
 ## Objective
-To build landing page, sidebar navigation, and final production polish.
+To enable export, batch operations, global search and final production polish.
 
 ## Title of Work Performed
-**Implementation of Landing Page, Navigation Overhaul, and UI Polish**
+**Implementation of Export, Batch Operations, and Final Polish**
 
 ## Project Parameters Involved
 - ☑ Frontend
-- ☐ Backend
+- ☑ Backend
 - ☐ Database
 - ☐ Machine Learning / AI
 - ☐ API Integration
 
 ## Work Done
-1. Created animated landing page with gradient backgrounds and feature sections
-2. Built sidebar navigation with breadcrumbs replacing top tab navigation
-3. Added loading skeletons, empty states, keyboard shortcuts, and mobile responsiveness
+1. Implemented PDF/CSV report generation and download for job matching results
+2. Built batch operations for bulk embedding, deletion, and multi-file upload
+3. Added global search command palette (Ctrl+K), mobile responsiveness, and final UI polish
 
 ---
 

@@ -315,191 +315,343 @@ client/src/components/
 
 ---
 
-## PART 6: Handling Missing and Exaggerated Skills ⏳ PENDING
+## PART 6: Professional UI Overhaul + Theme System + Landing Page ✅ COMPLETED
 
 ### Objective
-Detect unrealistic claims and fairly handle incomplete profiles with confidence scoring.
+Replace gamified UI with a clean, enterprise-grade design. Add dark/light theme, professional sidebar navigation, and animated public landing page.
 
-### 🎨 Creative Features
-- **Credibility score badge** - Trust indicator on each candidate
-- **Red flag alerts** - Visual warnings for suspicious claims
-- **Fair comparison mode** - Dynamic weight rebalancing
+### Theme System (Dark + Light Mode)
+- `ThemeContext` with `useTheme()` hook — stores preference in `localStorage`
+- CSS custom properties for all colors, backgrounds, borders, shadows
+- Toggle switch in header (sun/moon icon with smooth rotation)
+- System preference detection (`prefers-color-scheme`)
+- All existing components retrofitted to use theme variables
 
-### Exaggeration Detection Rules
-```javascript
-const exaggerationChecks = {
-  techAgeCheck,      // Technology release year vs claimed experience
-  expertOverload,    // Too many "expert" claims
-  careerConsistency  // Overlapping role durations
-};
-// Penalty: none(0), minor(5%), moderate(15%), severe(30%)
+### Sidebar Navigation (Replacing Top Tabs)
+- Collapsible sidebar with icon-only collapsed mode
+- Sections: Dashboard, Resumes, Jobs, Matching, Analytics, Settings
+- Active route highlighting with smooth indicator
+- User avatar + name at bottom with dropdown (Profile, Logout)
+- Mobile: slide-out drawer with overlay
+
+### Landing Page (Public, No Auth)
+- Hero section with headline, subtext, CTA buttons (Login / Register)
+- Feature showcase cards (AI Matching, Skill Analysis, Credibility Scoring)
+- How It Works section (3-step flow with icons)
+- Technology badges, footer with links
+- Smooth scroll animations on viewport entry
+
+### Professional Design Tokens
+- **Light mode:** White/gray backgrounds, slate-700 text, blue-600 accents, soft shadows
+- **Dark mode:** Slate-900/800 backgrounds, slate-100 text, blue-500 accents, subtle borders
+- Typography: `Inter` font (clean, professional)
+- Remove all emoji from UI buttons — use proper icons or text labels
+- Status badges: muted colored backgrounds, not bright pills
+- Rounded corners: 8px, subtle shadows
+
+### Loading & Error States
+- Skeleton loaders, empty state illustrations, error boundary with retry
+- Breadcrumb navigation on inner pages
+
+### Files
 ```
-
-### Backend: `exaggerationDetector.js`, `confidenceCalculator.js`, `fairnessAdjuster.js`
+client/src/
+├── context/ThemeContext.jsx           [NEW]
+├── layouts/AppLayout.jsx             [NEW]
+├── layouts/PublicLayout.jsx          [NEW]
+├── pages/Landing.jsx                 [NEW]
+├── components/Sidebar.jsx            [NEW]
+├── components/Breadcrumb.jsx         [NEW]
+├── components/SkeletonLoader.jsx     [NEW]
+├── components/EmptyState.jsx         [NEW]
+├── components/ErrorBoundary.jsx      [NEW]
+└── index.css                         [MODIFY]
+```
 
 ---
 
-## PART 7: Candidate Ranking and Stability Evaluation ⏳ PENDING
+## PART 7: Multi-Role Authentication + Candidate Portal ⏳ PENDING
 
 ### Objective
-Produce stable, fair rankings with sensitivity analysis.
+Add role-based auth (Recruiter vs Candidate). Candidates get a self-service portal to build profiles, browse jobs, and apply. Recruiters keep existing workflow plus new pipeline views.
 
-### 🎨 Creative Features
-- **Ranking animation** - Smooth reorder on updates
-- **Stability indicator** - Green/Yellow/Red per candidate
-- **Sensitivity analysis** - "What if" skill additions
-- **Rank breakdown** - Why one ranks above another
+### Role-Based Registration & Login
+- Registration form with role picker: **Recruiter** or **Candidate**
+- User model extended with `role` enum (`recruiter`, `candidate`)
+- Middleware: `requireRole('recruiter')`, `requireRole('candidate')`
+- Route guards: redirect to correct dashboard based on role
 
-### Backend: `rankingEngine.js`, `stabilityTester.js`, `rankHistoryTracker.js`
-### Routes: `rankings.js`
-### Model: `Ranking.js`
+### Candidate Dashboard
+- **My Profile** — Name, email, bio, skills (editable), experience, education
+- **Upload Resume** — PDF upload linked to candidate's account
+- **Browse Jobs** — All open jobs posted by recruiters
+- **Apply to Job** — One-click apply (creates Application record)
+- **My Applications** — Track status: Applied → Shortlisted → Interview → Offered → Hired / Rejected
+- **Application status updates** — Visual pipeline with colored step indicators
+
+### Recruiter Dashboard (Enhanced)
+- Existing: upload resumes, create jobs, run matching
+- New: **Applications inbox** — see candidates who applied for each job
+- New: **Pipeline view** — list view of application stages
+- New: **Quick status update** — move candidates through stages
+
+### Application Model
+```javascript
+{
+  candidateId: ObjectId,
+  jobId: ObjectId,
+  resumeId: ObjectId,
+  status: enum ['applied', 'screening', 'shortlisted', 'interview', 'offered', 'hired', 'rejected'],
+  appliedAt: Date,
+  statusHistory: [{ status, changedAt, changedBy }],
+  recruiterNotes: String
+}
+```
+
+### Public Job Board
+- `/jobs` — publicly accessible (no auth required)
+- Job cards with title, skills required, posted date
+- Search by keyword, filter by skills
+- Click job → full description + "Apply" button (redirects to login if not auth'd)
+
+### Files
+```
+server/
+├── models/Application.js               [NEW]
+├── routes/applications.js              [NEW]
+├── middleware/roleGuard.js             [NEW]
+├── models/User.js                      [MODIFY] — add role field
+
+client/src/
+├── pages/CandidateDashboard.jsx        [NEW]
+├── pages/RecruiterDashboard.jsx        [NEW] — refactored from Dashboard.jsx
+├── pages/JobBoard.jsx                  [NEW]
+├── pages/ApplicationTracker.jsx        [NEW]
+├── components/ApplicationPipeline.jsx  [NEW]
+├── components/JobCard.jsx              [NEW]
+├── components/StatusStepper.jsx        [NEW]
+├── pages/Login.jsx                     [MODIFY]
+├── pages/Register.jsx                  [MODIFY]
+├── App.jsx                             [MODIFY]
+```
+
+### API Endpoints
+| Method | Endpoint | Auth | Description |
+|--------|----------|------|-------------|
+| POST | `/api/applications` | Candidate | Apply to a job |
+| GET | `/api/applications/my` | Candidate | Get my applications |
+| GET | `/api/applications/job/:jobId` | Recruiter | Get applications for a job |
+| PUT | `/api/applications/:id/status` | Recruiter | Update application status |
+| GET | `/api/jobs/public` | None | Browse all open jobs |
+| GET | `/api/jobs/public/:id` | None | View single job details |
+
+---
+
+## PART 8: Exaggeration Detection + Credibility Scoring ⏳ PENDING
+
+### Objective
+Detect unrealistic or exaggerated skill claims in resumes and produce a trust/credibility score.
+
+### Detection Rules
+- **Technology age validation** — Can't claim 15 years of React (released 2013)
+- **Expert overload** — Flagging resumes with 10+ "expert"-level claims
+- **Career consistency** — Overlapping employment dates
+- **Skill-experience mismatch** — Claiming advanced skills with minimal experience
+
+### Credibility Scoring
+- 0-100 credibility score per resume
+- Penalty tiers: None (0%), Minor (-5%), Moderate (-15%), Severe (-30%)
+- Score impacts match ranking visibility (low credibility = warning badge)
+
+### Frontend Display
+- **Credibility badge** on resume cards (High / Medium / Low trust)
+- **Red flag panel** in expanded resume view with explanations
+- **Impact indicator** — shows how much score was reduced
+
+### Fair Comparison Mode
+- Dynamic weight rebalancing for candidates with incomplete profiles
+- Confidence intervals for sparse data
+
+### Files
+```
+server/services/exaggerationDetector.js, credibilityCalculator.js, fairnessAdjuster.js  [NEW]
+server/routes/credibility.js                                                              [NEW]
+client/src/components/CredibilityBadge.jsx, RedFlagPanel.jsx                              [NEW]
+```
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/rankings/job/:jobId` | Get rankings |
+| GET | `/api/credibility/resume/:id` | Get credibility report |
+| POST | `/api/credibility/analyze` | Run analysis on a resume |
+
+---
+
+## PART 9: Candidate Ranking, Stability & Comparison ⏳ PENDING
+
+### Objective
+Produce stable, fair rankings with sensitivity analysis and side-by-side candidate comparison.
+
+### Ranking System
+- Multi-factor ranking: match score × credibility × recency
+- Rank movement indicators (↑ ↓ —), ranking history per job
+
+### Stability Analysis
+- "What if candidate adds Docker?" sensitivity testing
+- Weight perturbation: ±10% → check rank changes
+- Stability indicator: Stable (green), Moderate (yellow), Volatile (red)
+
+### Side-by-Side Comparison
+- Select 2-3 candidates → comparison view
+- Columns: scores, skills, experience, education, credibility
+- Skill radar/spider chart — visual coverage overlay
+
+### Recruiter Notes & Annotations
+- Private notes per candidate per job, note history with timestamp
+- Quick templates ("Strong technical," "Schedule interview")
+
+### Files
+```
+server/services/rankingEngine.js, stabilityTester.js       [NEW]
+server/models/Ranking.js, Note.js                          [NEW]
+server/routes/rankings.js, candidates.js, comparison.js    [NEW]
+client/src/pages/CompareView.jsx                           [NEW]
+client/src/components/RankingTable.jsx, StabilityBadge.jsx, SkillRadar.jsx,
+                      ComparisonGrid.jsx, NoteEditor.jsx   [NEW]
+```
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/rankings/job/:jobId` | Get ranked candidates |
 | POST | `/api/rankings/job/:jobId/analyze` | Stability analysis |
 | POST | `/api/rankings/sensitivity` | "What-if" analysis |
-
----
-
-## PART 8: Analytics Dashboard & Polished UI ⏳ PENDING
-
-### Objective
-Build polished, recruiter-focused analytics dashboard with visualizations.
-
-### 🎨 Creative Features
-- **Stats overview cards** - Animated counters
-- **Interactive ranking table** - Sort, filter, bulk shortlist/reject
-- **Score breakdown** - Expandable horizontal bar charts
-- **Skill gap analysis** - Visual skill comparison
-- **Match quality distribution** - Score distribution chart
-- **Activity feed** - Recent events timeline
-
-### Frontend
-```
-pages/Analytics.jsx
-components/StatsCard.jsx, RankingTable.jsx, ActivityFeed.jsx, MatchDistribution.jsx
-```
-
-### Backend: `metricsService.js`, `routes/metrics.js`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/metrics/overview` | Dashboard summary |
-| GET | `/api/metrics/job/:id` | Job-specific analytics |
-| GET | `/api/metrics/skills-distribution` | Skill analytics |
-
----
-
-## PART 9: Candidate Detail Page & Comparison View ⏳ PENDING
-
-### Objective
-Dedicated candidate profile page + side-by-side comparison for deep evaluation.
-
-### 🎨 Creative Features
-- **Full candidate profile** - Skills, experience, education, match history
-- **Side-by-side comparison** - Compare 2-3 candidates visually
-- **Skill radar chart** - Spider chart for skill coverage
-- **Match history** - Scores across different jobs
-- **Notes & annotations** - Recruiter private notes
-
-### Frontend
-```
-pages/CandidateDetail.jsx, CompareView.jsx
-components/SkillRadar.jsx, MatchHistory.jsx, NoteEditor.jsx, ComparisonGrid.jsx
-```
-
-### Backend: `models/Note.js`, `routes/candidates.js`, `routes/comparison.js`
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
+| POST | `/api/compare` | Compare selected candidates |
 | GET | `/api/candidates/:id/full` | Full candidate profile |
-| GET | `/api/candidates/:id/match-history` | All match scores |
-| POST | `/api/candidates/:id/notes` | Add recruiter note |
-| POST | `/api/compare` | Compare candidates |
+| POST/GET | `/api/candidates/:id/notes` | Add/get recruiter notes |
 
 ---
 
-## PART 10: Notifications, Settings & User Preferences ⏳ PENDING
+## PART 10: Analytics Dashboard & Visualizations ⏳ PENDING
 
 ### Objective
-Add notification system, settings page, and personalization.
+Comprehensive analytics page with KPIs, charts, and actionable insights.
 
-### 🎨 Creative Features
-- **Toast notifications** - In-app alerts for completions
-- **Notification center** - Bell icon + dropdown
-- **Settings page** - Profile edit, matching weight preferences, theme toggle
-- **Weight sliders** - Custom semantic/skill/experience percentages
+### KPI Overview Cards
+- Total candidates, active jobs, avg match score, shortlist rate
+- Animated counter effect, trend indicators (↑ 12% vs last week)
 
-### Frontend
+### Charts (using Recharts)
+- **Score distribution** — histogram of match scores per job
+- **Skill gap analysis** — bar chart of most-missing skills
+- **Hiring funnel** — Applications → Screened → Shortlisted → Interviewed → Hired
+- **Activity timeline** — recent events feed
+
+### Interactive Ranking Table
+- Sort, filter, bulk actions, inline status update
+
+### Files
 ```
-pages/Settings.jsx
-components/NotificationBell.jsx, ToastProvider.jsx, WeightSlider.jsx
-context/NotificationContext.jsx, SettingsContext.jsx
+server/services/metricsService.js, routes/metrics.js      [NEW]
+client/src/pages/Analytics.jsx                             [NEW]
+client/src/components/StatsCard.jsx, MatchDistribution.jsx,
+                      SkillGapChart.jsx, HiringFunnel.jsx, ActivityFeed.jsx  [NEW]
 ```
-
-### Backend: `models/Notification.js`, `models/UserSettings.js`
-### Routes: `notifications.js`, `settings.js`
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/notifications` | Get notifications |
-| PUT | `/api/notifications/:id/read` | Mark as read |
-| GET/PUT | `/api/settings` | Get/update settings |
-| PUT | `/api/auth/profile` | Update name/password |
+| GET | `/api/metrics/overview` | Dashboard summary KPIs |
+| GET | `/api/metrics/job/:id` | Job-specific analytics |
+| GET | `/api/metrics/skill-gaps` | Skill gap analysis data |
+| GET | `/api/metrics/activity` | Recent activity feed |
 
 ---
 
-## PART 11: Export, Reports & Data Management ⏳ PENDING
+## PART 11: Notifications, Settings & Communication ⏳ PENDING
 
 ### Objective
-Enable PDF/CSV export, batch operations, and data management tools.
+Add notification system, user settings with matching weight customization, and in-app status updates.
 
-### 🎨 Creative Features
-- **PDF report generation** - Professional downloadable report
-- **CSV export** - Rankings as spreadsheets
-- **Batch operations** - Bulk delete, embed, shortlist
-- **Multi-upload** - Drag-n-drop multiple PDFs at once
-- **Archive completed** - Archive old jobs
+### Toast Notifications
+- `ToastProvider` context with `useToast()` hook
+- Types: success, error, warning, info — auto-dismiss with progress bar
 
-### Frontend
+### Notification Center
+- Bell icon in header with unread count badge
+- Dropdown notification list, mark as read / mark all as read
+- Types: match completed, application received, status changed
+
+### Settings Page
+- **Profile:** Edit name, email, change password
+- **Matching Weights:** Sliders for Semantic/Skill/Experience (must sum to 100%)
+- **Theme:** Dark/Light toggle (synced with Part 6 ThemeContext)
+- **Notifications:** Toggle which types to receive
+- Settings persisted in database per user
+
+### In-App Communication
+- Recruiter status notes visible to candidate
+- System-generated messages for status transitions
+
+### Files
 ```
-components/ExportButton.jsx, BatchActions.jsx, MultiUpload.jsx
+server/models/Notification.js, UserSettings.js, routes/notifications.js, routes/settings.js  [NEW]
+client/src/pages/Settings.jsx                                                                  [NEW]
+client/src/components/NotificationBell.jsx, ToastProvider.jsx, WeightSlider.jsx                [NEW]
+client/src/context/NotificationContext.jsx, SettingsContext.jsx                                 [NEW]
 ```
 
-### Backend: `pdfGenerator.js`, `csvExporter.js`, `batchProcessor.js`
-### Routes: `exports.js`
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/notifications` | Get user's notifications |
+| PUT | `/api/notifications/:id/read` | Mark as read |
+| PUT | `/api/notifications/read-all` | Mark all as read |
+| GET/PUT | `/api/settings` | Get/update settings |
+| PUT | `/api/auth/profile` | Update name/email/password |
+
+---
+
+## PART 12: Export, Batch Operations & Final Polish ⏳ PENDING
+
+### Objective
+Add PDF/CSV export, batch operations, multi-file upload, global search, and final refinements.
+
+### Export & Reports
+- **PDF report per job** — formatted with rankings, scores, skill analysis
+- **CSV export** — rankings as spreadsheet download
+- **Individual resume report** — one-page PDF summary
+
+### Batch Operations
+- Bulk delete, bulk embed, bulk shortlist/reject
+- Multi-file upload (drag-n-drop multiple PDFs)
+
+### Global Search (Ctrl+K)
+- Command palette overlay — search candidates, jobs, matches
+- Quick actions: navigate, run matching
+- Keyboard shortcut: `Ctrl+K` / `Cmd+K`
+
+### Job Management
+- Archive/close jobs, duplicate postings, edit details
+
+### Final Polish
+- Mobile responsive, keyboard navigation, smooth page transitions
+- Consistent hover states, favicon, page titles per route, 404 page
+
+### Files
+```
+server/services/pdfGenerator.js, csvExporter.js, batchProcessor.js, routes/exports.js  [NEW]
+client/src/components/ExportButton.jsx, BatchActions.jsx, MultiUpload.jsx,
+                      CommandPalette.jsx                                                [NEW]
+client/src/pages/NotFound.jsx                                                           [NEW]
+```
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/export/job/:id/pdf` | Download PDF report |
 | GET | `/api/export/job/:id/csv` | Download CSV ranking |
+| GET | `/api/export/resume/:id/pdf` | Resume summary PDF |
 | POST | `/api/batch/delete-resumes` | Bulk delete |
+| POST | `/api/batch/embed-all` | Bulk embed |
+| POST | `/api/batch/update-status` | Bulk status update |
 | POST | `/api/resumes/multi-upload` | Upload multiple PDFs |
-
----
-
-## PART 12: Landing Page, Sidebar Navigation & Final Polish ⏳ PENDING
-
-### Objective
-Build beautiful public landing page, professional sidebar navigation, and full polish.
-
-### 🎨 Creative Features
-- **Animated landing page** - Motion effects, gradient backgrounds, testimonials
-- **Sidebar navigation** - Professional left sidebar replacing top tabs
-- **Breadcrumbs** - Current location awareness
-- **Loading skeletons** - Content-shaped placeholders
-- **Empty states** - Beautiful illustrations
-- **Keyboard shortcuts** - Ctrl+K search
-- **Mobile responsive** - Hamburger menu + responsive layouts
-- **Error boundaries** - Graceful error handling
-
-### Frontend
-```
-pages/Landing.jsx
-components/Sidebar.jsx, Breadcrumb.jsx, SearchBar.jsx, SkeletonLoader.jsx, EmptyState.jsx
-layouts/AppLayout.jsx, PublicLayout.jsx
-```
+| GET | `/api/search?q=` | Global search |
 
 ---
 
@@ -526,6 +678,7 @@ layouts/AppLayout.jsx, PublicLayout.jsx
 | HTTP | Axios |
 | Charts | Recharts |
 | Animations | CSS transitions + framer-motion |
+| Font | Inter (Google Fonts) |
 
 ### AI/NLP
 | Component | Details |
@@ -543,39 +696,42 @@ layouts/AppLayout.jsx, PublicLayout.jsx
 SkillSense/
 ├── server/
 │   ├── config/db.js
-│   ├── middleware/auth.js
+│   ├── middleware/auth.js, roleGuard.js
 │   ├── models/
 │   │   ├── User.js, Resume.js, Job.js
-│   │   ├── Match.js, Ranking.js
+│   │   ├── Match.js, Application.js, Ranking.js
 │   │   ├── Notification.js, Note.js, UserSettings.js
 │   ├── routes/
 │   │   ├── auth.js, resumes.js, jobs.js
-│   │   ├── matching.js, rankings.js, metrics.js
-│   │   ├── candidates.js, comparison.js
+│   │   ├── matching.js, applications.js, rankings.js, metrics.js
+│   │   ├── candidates.js, comparison.js, credibility.js
 │   │   ├── notifications.js, settings.js, exports.js
 │   ├── services/
 │   │   ├── profiler.js, skillNormalizer.js
 │   │   ├── huggingFaceClient.js, jobEmbedding.js, resumeEmbedding.js
 │   │   ├── matchingEngine.js, skillOverlap.js, interpretationGenerator.js
-│   │   ├── exaggerationDetector.js, confidenceCalculator.js, fairnessAdjuster.js
+│   │   ├── exaggerationDetector.js, credibilityCalculator.js, fairnessAdjuster.js
 │   │   ├── rankingEngine.js, stabilityTester.js
 │   │   ├── metricsService.js, pdfGenerator.js, csvExporter.js, batchProcessor.js
 │   ├── .env, package.json, server.js
 ├── client/
 │   ├── src/
 │   │   ├── api.js
-│   │   ├── context/ (AuthContext, NotificationContext, SettingsContext)
+│   │   ├── context/ (AuthContext, ThemeContext, NotificationContext, SettingsContext)
 │   │   ├── layouts/ (AppLayout, PublicLayout)
-│   │   ├── pages/ (Landing, Login, Register, Dashboard, MatchingView,
-│   │   │          CandidateDetail, CompareView, Analytics, Settings)
+│   │   ├── pages/ (Landing, Login, Register, RecruiterDashboard, CandidateDashboard,
+│   │   │          JobBoard, ApplicationTracker, MatchingView,
+│   │   │          CompareView, Analytics, Settings, NotFound)
 │   │   ├── components/ (Sidebar, Breadcrumb, ResumeUpload, ResumeList,
-│   │   │               JobForm, JobList, StatsCard, ScoreGauge, ScoreBreakdown,
-│   │   │               SkillMatrix, SkillRadar, MatchCard, RankingTable,
-│   │   │               StabilityBadge, ComparisonGrid, ActivityFeed,
-│   │   │               MatchDistribution, NoteEditor, NotificationBell,
+│   │   │               JobForm, JobList, JobCard, StatsCard, ScoreGauge,
+│   │   │               ScoreBreakdown, SkillMatrix, SkillRadar, MatchCard,
+│   │   │               RankingTable, StabilityBadge, ComparisonGrid,
+│   │   │               ActivityFeed, MatchDistribution, SkillGapChart,
+│   │   │               HiringFunnel, NoteEditor, NotificationBell,
 │   │   │               ToastProvider, WeightSlider, ExportButton, BatchActions,
-│   │   │               MultiUpload, SearchBar, SkeletonLoader, EmptyState,
-│   │   │               ErrorBoundary)
+│   │   │               MultiUpload, CommandPalette, SkeletonLoader, EmptyState,
+│   │   │               ErrorBoundary, CredibilityBadge, RedFlagPanel,
+│   │   │               ApplicationPipeline, StatusStepper)
 │   │   ├── App.jsx, main.jsx
 │   ├── index.html, package.json, vite.config.js
 ├── implementation_plan.md
@@ -593,13 +749,13 @@ SkillSense/
 | 3 | Job Embeddings (Transformers.js) | ✅ Complete | ⭐⭐⭐ |
 | 4 | Resume Embeddings | ✅ Complete | ⭐⭐⭐ |
 | 5 | Matching Engine | ✅ Complete | ⭐⭐⭐⭐ |
-| 6 | Exaggeration Detection | ⏳ Pending | ⭐⭐⭐⭐ |
-| 7 | Ranking + Stability | ⏳ Pending | ⭐⭐⭐⭐ |
-| 8 | Analytics Dashboard | ⏳ Pending | ⭐⭐⭐⭐⭐ |
-| 9 | Candidate Detail + Comparison | ⏳ Pending | ⭐⭐⭐⭐ |
-| 10 | Notifications + Settings | ⏳ Pending | ⭐⭐⭐ |
-| 11 | Export, Reports & Batch Ops | ⏳ Pending | ⭐⭐⭐⭐ |
-| 12 | Landing Page + Sidebar + Polish | ⏳ Pending | ⭐⭐⭐⭐⭐ |
+| 6 | Professional UI + Theme + Landing | ✅ Complete | ⭐⭐⭐⭐⭐ |
+| 7 | Multi-Role Auth + Candidate Portal | ⏳ Next | ⭐⭐⭐⭐⭐ |
+| 8 | Exaggeration Detection + Credibility | ⏳ Pending | ⭐⭐⭐⭐ |
+| 9 | Ranking, Stability & Comparison | ⏳ Pending | ⭐⭐⭐⭐ |
+| 10 | Analytics Dashboard | ⏳ Pending | ⭐⭐⭐⭐⭐ |
+| 11 | Notifications, Settings & Communication | ⏳ Pending | ⭐⭐⭐ |
+| 12 | Export, Batch Ops & Final Polish | ⏳ Pending | ⭐⭐⭐⭐ |
 
 ---
 
