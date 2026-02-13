@@ -30,10 +30,12 @@ An intelligent recruitment platform that uses semantic AI to match candidates wi
 - 🌓 **Dark/Light Theme** — Toggle with system preference detection and localStorage persistence
 - 📐 **Sidebar Navigation** — Collapsible sidebar with SVG icons, mobile overlay
 - 🏠 **Landing Page** — Animated public landing page with feature cards, tech stack, how-it-works
+- 👥 **Multi-Role Auth** — Role-based access for Recruiters and Candidates
+- 📋 **Candidate Portal** — Self-service profile, job browsing, and application tracking
+- 💼 **Job Board** — Public job listing with advanced search and filtering
+- 🛤️ **Application Pipeline** — Visual status tracking (Applied → Screening → Offered)
 
 ### Upcoming 🚧
-- 👥 **Multi-Role Auth** — Separate Recruiter and Candidate experiences
-- 📋 **Candidate Portal** — Self-service profile, job browsing, and application tracking
 - ⚠️ **Exaggeration Detection** — Flag unrealistic claims with credibility scoring
 - 📊 **Stability Analysis** — Sensitivity testing and "what-if" scenarios
 - 📈 **Analytics Dashboard** — Stats cards, charts, and activity feeds
@@ -233,8 +235,8 @@ JWT_SECRET=your_secret_key
 | 4 | Resume Embeddings + Completeness | ✅ Complete |
 | 5 | Matching Engine | ✅ Complete |
 | 6 | Professional UI + Theme + Landing | ✅ Complete |
-| 7 | Multi-Role Auth + Candidate Portal | ⏳ Next |
-| 8 | Exaggeration Detection + Credibility | ⏳ Pending |
+| 7 | Multi-Role Auth + Candidate Portal | ✅ Complete |
+| 8 | Exaggeration Detection + Credibility | ⏳ Next |
 | 9 | Ranking, Stability & Comparison | ⏳ Pending |
 | 10 | Analytics Dashboard | ⏳ Pending |
 | 11 | Notifications, Settings & Communication | ⏳ Pending |
