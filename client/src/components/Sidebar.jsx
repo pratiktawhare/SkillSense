@@ -60,6 +60,17 @@ const Sidebar = ({ collapsed, onToggle }) => {
                     <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                 </svg>
             )
+        },
+        {
+            path: '/dashboard/analytics',
+            label: 'Analytics',
+            icon: (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="20" x2="18" y2="10" />
+                    <line x1="12" y1="20" x2="12" y2="4" />
+                    <line x1="6" y1="20" x2="6" y2="14" />
+                </svg>
+            )
         }
     ];
 
@@ -118,7 +129,7 @@ const Sidebar = ({ collapsed, onToggle }) => {
 
             <aside
                 className={`sidebar fixed top-0 left-0 h-full z-50 flex flex-col border-r overflow-x-hidden
-                    ${collapsed ? 'w-[72px] -translate-x-full lg:translate-x-0' : 'w-[260px] translate-x-0'}`}
+                    ${collapsed ? 'collapsed w-[72px] -translate-x-full lg:translate-x-0' : 'w-[260px] translate-x-0'}`}
                 style={{
                     backgroundColor: 'var(--bg-secondary)',
                     borderColor: 'var(--border-primary)',
@@ -126,24 +137,27 @@ const Sidebar = ({ collapsed, onToggle }) => {
                 }}
             >
                 {/* Logo area */}
-                <div className="flex items-center h-16 px-4 border-b" style={{ borderColor: 'var(--border-primary)' }}>
-                    <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-                            style={{ background: 'var(--accent-gradient)' }}>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="none">
-                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
+                <div className={`flex items-center h-16 border-b ${collapsed ? 'justify-center px-2' : 'px-4'}`}
+                    style={{ borderColor: 'var(--border-primary)' }}>
+                    {!collapsed && (
+                        <div className="flex items-center gap-3 overflow-hidden">
+                            <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+                                style={{ background: 'var(--accent-gradient)' }}>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="white" stroke="none">
+                                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+                            <span className="font-bold text-lg whitespace-nowrap"
+                                style={{ color: 'var(--text-primary)' }}>
+                                SkillSense
+                            </span>
                         </div>
-                        <span className={`sidebar-label font-bold text-lg whitespace-nowrap`}
-                            style={{ color: 'var(--text-primary)' }}>
-                            SkillSense
-                        </span>
-                    </div>
+                    )}
 
                     {/* Collapse toggle - desktop only */}
                     <button
                         onClick={onToggle}
-                        className="hidden lg:flex ml-auto items-center justify-center w-7 h-7 rounded-md hover:bg-[var(--bg-tertiary)] transition"
+                        className={`hidden lg:flex items-center justify-center w-7 h-7 rounded-md hover:bg-[var(--bg-tertiary)] transition ${collapsed ? '' : 'ml-auto'}`}
                         style={{ color: 'var(--text-tertiary)' }}
                         title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
                     >

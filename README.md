@@ -34,12 +34,13 @@ An intelligent recruitment platform that uses semantic AI to match candidates wi
 - 📋 **Candidate Portal** — Self-service profile, job browsing, and application tracking
 - 💼 **Job Board** — Public job listing with advanced search and filtering
 - 🛤️ **Application Pipeline** — Visual status tracking (Applied → Screening → Offered)
+- ⚠️ **Exaggeration Detection** — Flag unrealistic claims with credibility scoring
+- 🛡️ **Credibility Scoring** — 0-100 trust score with red flag detection
+- ⚖️ **Side-by-Side Compare** — Compare 2-3 candidates visually with composite ranking scores
+- 📈 **Analytics Dashboard** — Stats cards, charts, and activity feeds
 
 ### Upcoming 🚧
-- ⚠️ **Exaggeration Detection** — Flag unrealistic claims with credibility scoring
 - 📊 **Stability Analysis** — Sensitivity testing and "what-if" scenarios
-- 📈 **Analytics Dashboard** — Stats cards, charts, and activity feeds
-- ⚖️ **Side-by-Side Compare** — Compare 2-3 candidates visually
 - 🔔 **Notifications** — Toast alerts and notification center
 - ⚙️ **Settings** — Matching weight customization and theme toggle
 - 📥 **Export Reports** — PDF and CSV export for matching results
@@ -236,10 +237,10 @@ JWT_SECRET=your_secret_key
 | 5 | Matching Engine | ✅ Complete |
 | 6 | Professional UI + Theme + Landing | ✅ Complete |
 | 7 | Multi-Role Auth + Candidate Portal | ✅ Complete |
-| 8 | Exaggeration Detection + Credibility | ⏳ Next |
-| 9 | Ranking, Stability & Comparison | ⏳ Pending |
-| 10 | Analytics Dashboard | ⏳ Pending |
-| 11 | Notifications, Settings & Communication | ⏳ Pending |
+| 8 | Exaggeration Detection + Credibility | ✅ Complete |
+| 9 | Ranking, Stability & Comparison | ✅ Complete |
+| 10 | Analytics Dashboard | ✅ Complete |
+| 11 | Notifications, Settings & Communication | ⏳ Next |
 | 12 | Export, Batch Ops & Final Polish | ⏳ Pending |
 
 ## 📄 License

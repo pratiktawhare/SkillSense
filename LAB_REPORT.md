@@ -246,6 +246,22 @@ To build comprehensive analytics dashboard with KPIs and visualizations.
 - ☐ API Integration
 
 ## Work Done
+1. Designed and integrated interactive Match Score Distribution chart using Recharts to visualize matching results group frequency.
+2. Built Hiring Funnel chart mapping candidate progressions from Application through the initial pipeline stages dynamically fetching real-time totals.
+3. Created an activity feed outlining chronological actions across jobs matching metrics to deliver insight visibility to recruiter platform users.
+
+---
+
+# PART 11
+
+## Project Parameters Involved
+- ☑ Frontend
+- ☑ Backend
+- ☑ Database
+- ☐ Machine Learning / AI
+- ☐ API Integration
+
+## Work Done
 1. Created KPI overview cards with animated counters and trend indicators
 2. Built score distribution, skill gap analysis, and hiring funnel charts using Recharts
 3. Implemented interactive ranking table with sort, filter, and bulk actions

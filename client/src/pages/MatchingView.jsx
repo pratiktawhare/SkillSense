@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { jobAPI, matchAPI } from '../api';
 import MatchCard from '../components/MatchCard';
+import RankingTable from '../components/RankingTable';
 import ScoreGauge from '../components/ScoreGauge';
 
 const MatchingView = ({ onBack }) => {
@@ -11,6 +12,7 @@ const MatchingView = ({ onBack }) => {
     const [loading, setLoading] = useState(false);
     const [matching, setMatching] = useState(false);
     const [updatingIds, setUpdatingIds] = useState(new Set());
+    const [viewMode, setViewMode] = useState('ranking'); // 'ranking' or 'detailed'
     const [filter, setFilter] = useState('all'); // all, shortlisted, rejected, pending
 
     // Fetch jobs on mount
@@ -245,26 +247,44 @@ const MatchingView = ({ onBack }) => {
                 </div>
             )}
 
-            {/* Filter tabs */}
+            {/* Filter tabs and View mode */}
             {matches.length > 0 && (
-                <div className="flex gap-2 flex-wrap">
-                    {[
-                        { key: 'all', label: `All (${stats.total})` },
-                        { key: 'shortlisted', label: `Shortlisted (${stats.shortlisted})`, color: 'emerald' },
-                        { key: 'pending', label: `Pending (${stats.pending})` },
-                        { key: 'rejected', label: `Rejected (${stats.rejected})`, color: 'red' }
-                    ].map(f => (
+                <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div className="flex gap-2 flex-wrap">
+                        {[
+                            { key: 'all', label: `All (${stats.total})` },
+                            { key: 'shortlisted', label: `Shortlisted (${stats.shortlisted})`, color: 'emerald' },
+                            { key: 'pending', label: `Pending (${stats.pending})` },
+                            { key: 'rejected', label: `Rejected (${stats.rejected})`, color: 'red' }
+                        ].map(f => (
+                            <button
+                                key={f.key}
+                                onClick={() => setFilter(f.key)}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition ${filter === f.key
+                                    ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25'
+                                    : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
+                                    }`}
+                            >
+                                {f.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* View Mode Toggle */}
+                    <div className="flex bg-slate-800/50 backdrop-blur-xl border border-slate-700 rounded-lg p-1">
                         <button
-                            key={f.key}
-                            onClick={() => setFilter(f.key)}
-                            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${filter === f.key
-                                ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/25'
-                                : 'bg-slate-700/50 text-slate-300 hover:bg-slate-700'
-                                }`}
+                            onClick={() => setViewMode('ranking')}
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition ${viewMode === 'ranking' ? 'bg-slate-700 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
                         >
-                            {f.label}
+                            📊 Ranking
                         </button>
-                    ))}
+                        <button
+                            onClick={() => setViewMode('detailed')}
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition ${viewMode === 'detailed' ? 'bg-slate-700 text-white shadow' : 'text-slate-400 hover:text-slate-200'}`}
+                        >
+                            📝 Detailed
+                        </button>
+                    </div>
                 </div>
             )}
 
@@ -287,6 +307,8 @@ const MatchingView = ({ onBack }) => {
                         <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700 rounded-2xl p-8 text-center">
                             <p className="text-slate-400">No candidates match this filter.</p>
                         </div>
+                    ) : viewMode === 'ranking' ? (
+                        <RankingTable jobId={selectedJobId} />
                     ) : (
                         filteredMatches.map((match) => (
                             <MatchCard

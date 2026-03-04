@@ -72,6 +72,12 @@ const resumeSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    credibility: {
+        score: { type: Number },
+        trustLevel: { type: String, enum: ['high', 'medium', 'low'] },
+        flagCount: { type: Number, default: 0 },
+        analyzedAt: { type: Date }
+    },
     uploadedAt: {
         type: Date,
         default: Date.now

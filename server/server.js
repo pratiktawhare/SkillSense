@@ -9,6 +9,9 @@ const resumeRoutes = require('./routes/resumes');
 const jobRoutes = require('./routes/jobs');
 const matchingRoutes = require('./routes/matching');
 const applicationRoutes = require('./routes/applications');
+const credibilityRoutes = require('./routes/credibility');
+const rankingsRoutes = require('./routes/rankings');
+const metricsRoutes = require('./routes/metrics');
 
 const app = express();
 
@@ -30,6 +33,9 @@ app.use('/api/resumes', resumeRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/match', matchingRoutes);
 app.use('/api/applications', applicationRoutes);
+app.use('/api/credibility', credibilityRoutes);
+app.use('/api/rankings', rankingsRoutes);
+app.use('/api/metrics', metricsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

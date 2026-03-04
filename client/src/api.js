@@ -69,4 +69,27 @@ export const applicationAPI = {
     updateStatus: (id, status) => api.put(`/applications/${id}/status`, { status })
 };
 
+// Credibility API
+export const credibilityAPI = {
+    getReport: (resumeId) => api.get(`/credibility/resume/${resumeId}`),
+    analyze: (resumeId) => api.post('/credibility/analyze', { resumeId }),
+    batchAnalyze: () => api.post('/credibility/batch-analyze')
+};
+
+// Rankings API
+export const rankingsAPI = {
+    getRanked: (jobId) => api.get(`/rankings/job/${jobId}`),
+    compare: (jobId, resumeIds) => api.post('/rankings/compare', { jobId, resumeIds }),
+    sensitivity: (jobId, resumeId, skill) => api.post('/rankings/sensitivity', { jobId, resumeId, skill }),
+    getNotes: (resumeId, jobId) => api.get(`/rankings/notes/${resumeId}`, { params: { jobId } }),
+    addNote: (data) => api.post('/rankings/notes', data),
+    deleteNote: (noteId) => api.delete(`/rankings/notes/${noteId}`)
+};
+
+// Metrics API
+export const metricsAPI = {
+    getOverview: () => api.get('/metrics/overview'),
+    getJobMetrics: (jobId) => api.get(`/metrics/job/${jobId}`)
+};
+
 export default api;

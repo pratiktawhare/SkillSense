@@ -123,7 +123,7 @@ router.post('/', auth, upload.single('resume'), async (req, res) => {
 router.get('/', auth, async (req, res) => {
     try {
         const resumes = await Resume.find({ recruiter: req.user._id })
-            .select('candidateName fileName uploadedAt rawText profile embeddingStatus profileCompleteness embeddingGeneratedAt embeddingError')
+            .select('candidateName fileName uploadedAt rawText profile embeddingStatus profileCompleteness embeddingGeneratedAt embeddingError credibility')
             .sort({ uploadedAt: -1 });
 
         res.json(resumes.map(r => ({
@@ -134,6 +134,7 @@ router.get('/', auth, async (req, res) => {
             profile: r.profile,
             embeddingStatus: r.embeddingStatus || 'pending',
             profileCompleteness: r.profileCompleteness || 0,
+            credibility: r.credibility || null,
             uploadedAt: r.uploadedAt
         })));
     } catch (error) {

@@ -11,6 +11,8 @@ import DashboardOverview from './pages/DashboardOverview';
 import ResumesPage from './pages/ResumesPage';
 import JobsPage from './pages/JobsPage';
 import MatchingPage from './pages/MatchingPage';
+import CompareView from './pages/CompareView';
+import Analytics from './pages/Analytics';
 import CandidateDashboard from './pages/CandidateDashboard';
 import JobBoard from './pages/JobBoard';
 import ApplicationTracker from './pages/ApplicationTracker';
@@ -100,6 +102,8 @@ function App() {
                 <Route path="/dashboard/resumes" element={<ResumesPage />} />
                 <Route path="/dashboard/jobs" element={<JobsPage />} />
                 <Route path="/dashboard/matching" element={<MatchingPage />} />
+                <Route path="/dashboard/compare" element={<CompareView />} />
+                <Route path="/dashboard/analytics" element={<Analytics />} />
                 <Route path="/dashboard/applications" element={<ApplicationPipeline />} />
               </Route>
 

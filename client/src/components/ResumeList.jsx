@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { resumeAPI } from '../api';
+import CredibilityBadge from './CredibilityBadge';
+import RedFlagPanel from './RedFlagPanel';
 
 // Skill tag component for displaying extracted skills
 const SkillTag = ({ skill }) => {
@@ -78,7 +80,7 @@ const CompletenessMeter = ({ score }) => {
 };
 
 // Expanded detail panel for a resume
-const ResumeDetail = ({ resume }) => {
+const ResumeDetail = ({ resume, onRefresh }) => {
     return (
         <div className="mt-4 pt-4 border-t border-slate-600 space-y-4 animate-in">
             {/* All Skills - grouped by category */}
@@ -158,6 +160,9 @@ const ResumeDetail = ({ resume }) => {
                     </p>
                 </div>
             )}
+
+            {/* Credibility Report */}
+            <RedFlagPanel resumeId={resume.id} />
         </div>
     );
 };
@@ -209,8 +214,8 @@ const ResumeList = ({ resumes, onDelete, onRefresh }) => {
                     <div
                         key={resume.id}
                         className={`bg-slate-800/50 backdrop-blur-xl border rounded-xl p-4 transition cursor-pointer ${expandedId === resume.id
-                                ? 'border-purple-500/50 shadow-lg shadow-purple-500/10'
-                                : 'border-slate-700 hover:border-slate-600'
+                            ? 'border-purple-500/50 shadow-lg shadow-purple-500/10'
+                            : 'border-slate-700 hover:border-slate-600'
                             }`}
                         onClick={() => toggleExpand(resume.id)}
                     >
@@ -225,6 +230,7 @@ const ResumeList = ({ resumes, onDelete, onRefresh }) => {
                                         onGenerate={() => handleGenerateEmbedding(resume.id)}
                                         isGenerating={generatingIds.has(resume.id)}
                                     />
+                                    <CredibilityBadge resume={resume} onUpdate={onRefresh} />
                                 </div>
                                 <p className="text-slate-400 text-sm mt-1">{resume.fileName}</p>
 
@@ -293,7 +299,7 @@ const ResumeList = ({ resumes, onDelete, onRefresh }) => {
 
                         {/* Expanded: Full Detail Panel */}
                         {expandedId === resume.id && (
-                            <ResumeDetail resume={resume} />
+                            <ResumeDetail resume={resume} onRefresh={onRefresh} />
                         )}
                     </div>
                 ))}
