@@ -3,6 +3,7 @@ const Match = require('../models/Match');
 const Job = require('../models/Job');
 const Resume = require('../models/Resume');
 const Application = require('../models/Application');
+const Notification = require('../models/Notification');
 const auth = require('../middleware/auth');
 const { matchResumeToJob } = require('../services/matchingEngine');
 
@@ -98,7 +99,16 @@ router.post('/job/:jobId', auth, async (req, res) => {
             m.rank = idx + 1;
         });
 
-        console.log(`🎯 Matched ${matches.length} resumes against "${job.title}" (${newCount} new, ${updatedCount} updated)`);
+        // Generate success notification
+        await Notification.create({
+            userId: req.user._id,
+            title: 'Matching Completed',
+            message: `Successfully analyzed ${matches.length} candidates for ${job.title}.`,
+            type: 'success',
+            actionLink: '/dashboard/matching'
+        });
+
+        console.log(`🎯 Matched ${matches.length} resumes against "${job.title}"`);
 
         res.json({
             jobId: job._id,

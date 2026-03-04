@@ -254,22 +254,6 @@ To build comprehensive analytics dashboard with KPIs and visualizations.
 
 # PART 11
 
-## Project Parameters Involved
-- ☑ Frontend
-- ☑ Backend
-- ☑ Database
-- ☐ Machine Learning / AI
-- ☐ API Integration
-
-## Work Done
-1. Created KPI overview cards with animated counters and trend indicators
-2. Built score distribution, skill gap analysis, and hiring funnel charts using Recharts
-3. Implemented interactive ranking table with sort, filter, and bulk actions
-
----
-
-# PART 11
-
 ## Title of Project
 **AI-Based Resume and Job Profiling System**
 
@@ -277,7 +261,7 @@ To build comprehensive analytics dashboard with KPIs and visualizations.
 To add notification system, user settings, and in-app communication.
 
 ## Title of Work Performed
-**Implementation of Notifications, Settings, and Communication**
+**Implementation of Settings Tuning, Notification Engine and Platform Command Tool**
 
 ## Project Parameters Involved
 - ☑ Frontend
@@ -287,9 +271,10 @@ To add notification system, user settings, and in-app communication.
 - ☐ API Integration
 
 ## Work Done
-1. Built toast notification system with auto-dismiss and notification center with bell dropdown
-2. Created settings page with profile editing, matching weight sliders, and theme preferences
-3. Implemented in-app status messages for application updates
+1. Designed and deployed interactive Settings Dashboard with variable tuning for adjusting Artificial Intelligence ranking parameters inside local application state.
+2. Set up React Toast Context generating interactive non-intrusive alert popups.
+3. Created an overlapping `Command Palette` navigation popup listening for `Ctrl+K` keyboard events for accessibility traversal.
+4. Added system-wide notification infrastructure pushing alerts on Match Completion tasks or application updates.
 
 ---
 
@@ -302,19 +287,17 @@ To add notification system, user settings, and in-app communication.
 To enable export, batch operations, global search and final production polish.
 
 ## Title of Work Performed
-**Implementation of Export, Batch Operations, and Final Polish**
+**⏳ Pending Implementation**
 
 ## Project Parameters Involved
-- ☑ Frontend
-- ☑ Backend
+- ☐ Frontend
+- ☐ Backend
 - ☐ Database
 - ☐ Machine Learning / AI
 - ☐ API Integration
 
 ## Work Done
-1. Implemented PDF/CSV report generation and download for job matching results
-2. Built batch operations for bulk embedding, deletion, and multi-file upload
-3. Added global search command palette (Ctrl+K), mobile responsiveness, and final UI polish
+*Not started yet*
 
 ---
 

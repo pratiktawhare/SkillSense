@@ -38,13 +38,14 @@ An intelligent recruitment platform that uses semantic AI to match candidates wi
 - 🛡️ **Credibility Scoring** — 0-100 trust score with red flag detection
 - ⚖️ **Side-by-Side Compare** — Compare 2-3 candidates visually with composite ranking scores
 - 📈 **Analytics Dashboard** — Stats cards, charts, and activity feeds
+- 🔔 **Notifications** — Toast alerts and notification center
+- ⚙️ **Settings & Customization** — Modify the algorithm weights, customize profile and toggle System themes across UI.
+- ⚡ **Command Palette** — Ctrl+K global navigation.
 
 ### Upcoming 🚧
-- 📊 **Stability Analysis** — Sensitivity testing and "what-if" scenarios
-- 🔔 **Notifications** — Toast alerts and notification center
-- ⚙️ **Settings** — Matching weight customization and theme toggle
 - 📥 **Export Reports** — PDF and CSV export for matching results
-- ⌨️ **Global Search** — Ctrl+K command palette
+- 📦 **Batch Operations** — Bulk embedding, deletion, and multi-file upload
+- 📱 **Mobile Polish** — Fully responsive on all screen sizes
 
 ## 🛠️ Tech Stack
 
@@ -58,6 +59,7 @@ An intelligent recruitment platform that uses semantic AI to match candidates wi
 ### Frontend
 - **Framework:** React 18 + Vite (fast dev server)
 - **Styling:** Tailwind CSS 4 + CSS variables theme system (dark/light)
+- **Charts:** Recharts (analytics visualizations)
 - **Routing:** React Router v6 with nested layouts
 - **HTTP Client:** Axios with JWT interceptor
 
@@ -115,65 +117,102 @@ http://localhost:5173
 
 ```
 SkillSense/
-├── server/                    # Backend API
-│   ├── config/db.js           # MongoDB connection
-│   ├── middleware/auth.js     # JWT middleware
-│   ├── models/                # Mongoose schemas
-│   │   ├── User.js            # Recruiter accounts
-│   │   ├── Resume.js          # Resumes + embeddings
-│   │   ├── Job.js             # Jobs + embeddings
-│   │   └── Match.js           # Match scores + skill analysis
-│   ├── routes/                # API endpoints
-│   │   ├── auth.js            # Register/Login
-│   │   ├── resumes.js         # Resume CRUD + embedding
-│   │   ├── jobs.js            # Job CRUD + embedding
-│   │   └── matching.js        # Run matching + results + status
-│   ├── services/              # Business logic
-│   │   ├── profiler.js        # Skill/experience extraction
-│   │   ├── skillNormalizer.js  # 90+ alias mapping
-│   │   ├── huggingFaceClient.js # Transformers.js wrapper
-│   │   ├── jobEmbedding.js    # Job embedding generation
-│   │   ├── resumeEmbedding.js # Resume embedding + completeness
-│   │   ├── matchingEngine.js  # Core matching algorithm
-│   │   ├── skillOverlap.js    # Skill overlap analysis utilities
-│   │   └── interpretationGenerator.js # Match explanations
-│   └── server.js              # Express entry point
-├── client/                    # React frontend
+├── server/                          # Backend API
+│   ├── config/db.js                 # MongoDB connection
+│   ├── middleware/auth.js           # JWT verification middleware
+│   ├── models/                      # Mongoose schemas
+│   │   ├── User.js                  # User accounts (recruiter/candidate)
+│   │   ├── Resume.js                # Resumes + embeddings + credibility
+│   │   ├── Job.js                   # Jobs + embeddings
+│   │   ├── Match.js                 # Match scores + skill analysis
+│   │   ├── Application.js           # Job applications + history
+│   │   ├── Note.js                  # Recruiter notes per candidate
+│   │   ├── Notification.js          # User notifications
+│   │   └── UserSettings.js          # User preferences + matching weights
+│   ├── routes/                      # API endpoints
+│   │   ├── auth.js                  # Register/Login
+│   │   ├── resumes.js               # Resume CRUD + embedding
+│   │   ├── jobs.js                  # Job CRUD + embedding
+│   │   ├── matching.js              # Run matching + results + status
+│   │   ├── applications.js          # Application pipeline management
+│   │   ├── credibility.js           # Credibility analysis endpoints
+│   │   ├── rankings.js              # Ranking + compare + notes
+│   │   ├── metrics.js               # Analytics data endpoints
+│   │   ├── notifications.js         # Notification CRUD
+│   │   └── settings.js              # User settings management
+│   ├── services/                    # Business logic
+│   │   ├── profiler.js              # Skill/experience extraction
+│   │   ├── skillNormalizer.js        # 90+ alias mapping
+│   │   ├── huggingFaceClient.js     # Transformers.js wrapper
+│   │   ├── jobEmbedding.js          # Job embedding generation
+│   │   ├── resumeEmbedding.js       # Resume embedding + completeness
+│   │   ├── matchingEngine.js        # Core matching algorithm
+│   │   ├── skillOverlap.js          # Skill overlap analysis
+│   │   ├── interpretationGenerator.js # Match explanations
+│   │   ├── exaggerationDetector.js  # Resume red flag detection
+│   │   ├── credibilityCalculator.js # 0-100 trust scoring
+│   │   ├── rankingEngine.js         # Multi-factor ranking + sensitivity
+│   │   └── metricsService.js        # Analytics aggregation service
+│   └── server.js                    # Express entry point
+├── client/                          # React frontend
 │   ├── src/
-│   │   ├── components/        # UI components
-│   │   │   ├── Sidebar.jsx    # Collapsible sidebar navigation
-│   │   │   ├── Breadcrumb.jsx # Auto-generated breadcrumbs
-│   │   │   ├── SkeletonLoader.jsx # Loading placeholders
-│   │   │   ├── EmptyState.jsx # Empty data display
-│   │   │   ├── ErrorBoundary.jsx # Crash recovery
-│   │   │   ├── ResumeUpload.jsx
-│   │   │   ├── ResumeList.jsx # Expandable resume cards
-│   │   │   ├── JobForm.jsx
-│   │   │   ├── JobList.jsx    # Expandable job cards
-│   │   │   ├── MatchCard.jsx  # Match result card with actions
-│   │   │   ├── ScoreGauge.jsx # Animated circular score dial
-│   │   │   ├── ScoreBreakdown.jsx # Score component bars
-│   │   │   └── SkillMatrix.jsx # Skill match visualization
-│   │   ├── layouts/           # Layout wrappers
-│   │   │   ├── AppLayout.jsx  # Sidebar + header + content
-│   │   │   └── PublicLayout.jsx # Public pages wrapper
-│   │   ├── pages/             # Page components
-│   │   │   ├── Landing.jsx    # Public landing page
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── DashboardOverview.jsx # Stats + quick actions
-│   │   │   ├── ResumesPage.jsx # Resume management
-│   │   │   ├── JobsPage.jsx   # Job management
-│   │   │   ├── MatchingPage.jsx # Matching wrapper
-│   │   │   └── MatchingView.jsx # Matching engine UI
-│   │   ├── context/
-│   │   │   ├── AuthContext.jsx # Authentication state
-│   │   │   └── ThemeContext.jsx # Dark/light theme state
-│   │   └── api.js             # Axios API client
+│   │   ├── components/              # UI components
+│   │   │   ├── Sidebar.jsx          # Collapsible sidebar navigation
+│   │   │   ├── Breadcrumb.jsx       # Auto-generated breadcrumbs
+│   │   │   ├── SkeletonLoader.jsx   # Loading placeholders
+│   │   │   ├── EmptyState.jsx       # Empty data display
+│   │   │   ├── ErrorBoundary.jsx    # Crash recovery
+│   │   │   ├── ResumeUpload.jsx     # Drag-and-drop resume upload
+│   │   │   ├── ResumeList.jsx       # Expandable resume cards
+│   │   │   ├── JobForm.jsx          # Job creation form
+│   │   │   ├── JobList.jsx          # Expandable job cards
+│   │   │   ├── MatchCard.jsx        # Match result card with actions
+│   │   │   ├── ScoreGauge.jsx       # Animated circular score dial
+│   │   │   ├── ScoreBreakdown.jsx   # Score component bars
+│   │   │   ├── SkillMatrix.jsx      # Skill match visualization
+│   │   │   ├── CredibilityBadge.jsx # Trust score badge
+│   │   │   ├── RedFlagPanel.jsx     # Exaggeration details panel
+│   │   │   ├── RankingTable.jsx     # Multi-factor ranking view
+│   │   │   ├── NoteEditor.jsx       # Recruiter notes per candidate
+│   │   │   ├── StatusStepper.jsx    # Application stage stepper
+│   │   │   ├── StatsCard.jsx        # Analytics KPI card
+│   │   │   ├── MatchDistribution.jsx # Score distribution chart
+│   │   │   ├── HiringFunnel.jsx     # Pipeline funnel chart
+│   │   │   ├── SkillGapChart.jsx    # Missing skills analysis
+│   │   │   ├── ActivityFeed.jsx     # Recent activity timeline
+│   │   │   ├── NotificationBell.jsx # Header notification dropdown
+│   │   │   ├── CommandPalette.jsx   # Ctrl+K global navigation
+│   │   │   └── MessageModal.jsx     # In-app candidate messaging
+│   │   ├── layouts/                 # Layout wrappers
+│   │   │   ├── AppLayout.jsx        # Sidebar + header + content
+│   │   │   └── PublicLayout.jsx     # Public pages wrapper
+│   │   ├── pages/                   # Page components
+│   │   │   ├── Landing.jsx          # Public landing page
+│   │   │   ├── Login.jsx            # Authentication
+│   │   │   ├── Register.jsx         # Account creation
+│   │   │   ├── DashboardOverview.jsx # Recruiter overview
+│   │   │   ├── ResumesPage.jsx      # Resume management
+│   │   │   ├── JobsPage.jsx         # Job management
+│   │   │   ├── MatchingPage.jsx     # Matching wrapper
+│   │   │   ├── MatchingView.jsx     # Matching engine UI
+│   │   │   ├── CompareView.jsx      # Side-by-side comparison
+│   │   │   ├── Analytics.jsx        # Analytics dashboard
+│   │   │   ├── Settings.jsx         # User settings page
+│   │   │   ├── ApplicationPipeline.jsx # Recruiter applicant view
+│   │   │   ├── CandidateDashboard.jsx  # Candidate overview
+│   │   │   ├── JobBoard.jsx         # Public job listing
+│   │   │   └── ApplicationTracker.jsx  # Candidate application history
+│   │   ├── context/                 # React Context providers
+│   │   │   ├── AuthContext.jsx      # Authentication state
+│   │   │   ├── ThemeContext.jsx      # Dark/light theme state
+│   │   │   ├── ToastContext.jsx     # Toast notification system
+│   │   │   ├── NotificationContext.jsx # Notification management
+│   │   │   └── SettingsContext.jsx   # User settings state
+│   │   └── api.js                   # Axios API client
 │   └── index.html
-├── implementation_plan.md     # Full 12-part development plan
-├── PROGRESS.md                # Feature progress tracker
-├── LAB_REPORT.md              # Lab report for all parts
+├── implementation_plan.md           # Full 12-part development plan
+├── PROGRESS.md                      # Feature progress tracker
+├── LAB_REPORT.md                    # Lab report for all parts
 └── README.md
 ```
 
@@ -240,8 +279,8 @@ JWT_SECRET=your_secret_key
 | 8 | Exaggeration Detection + Credibility | ✅ Complete |
 | 9 | Ranking, Stability & Comparison | ✅ Complete |
 | 10 | Analytics Dashboard | ✅ Complete |
-| 11 | Notifications, Settings & Communication | ⏳ Next |
-| 12 | Export, Batch Ops & Final Polish | ⏳ Pending |
+| 11 | Notifications, Settings & Communication | ✅ Complete |
+| 12 | Export, Batch Ops & Final Polish | ⏳ Next |
 
 ## 📄 License
 

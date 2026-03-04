@@ -565,38 +565,17 @@ client/src/components/StatsCard.jsx, MatchDistribution.jsx,
 
 ---
 
-## PART 11: Notifications, Settings & Communication ⏳ PENDING
+## PART 11: Notifications, Settings & Communication ✅ COMPLETE
 
 ### Objective
 Add notification system, user settings with matching weight customization, and in-app status updates.
 
-### Toast Notifications
-- `ToastProvider` context with `useToast()` hook
-- Types: success, error, warning, info — auto-dismiss with progress bar
-
-### Notification Center
-- Bell icon in header with unread count badge
-- Dropdown notification list, mark as read / mark all as read
-- Types: match completed, application received, status changed
-
-### Settings Page
-- **Profile:** Edit name, email, change password
-- **Matching Weights:** Sliders for Semantic/Skill/Experience (must sum to 100%)
-- **Theme:** Dark/Light toggle (synced with Part 6 ThemeContext)
-- **Notifications:** Toggle which types to receive
-- Settings persisted in database per user
-
-### In-App Communication
-- Recruiter status notes visible to candidate
-- System-generated messages for status transitions
-
-### Files
-```
-server/models/Notification.js, UserSettings.js, routes/notifications.js, routes/settings.js  [NEW]
-client/src/pages/Settings.jsx                                                                  [NEW]
-client/src/components/NotificationBell.jsx, ToastProvider.jsx, WeightSlider.jsx                [NEW]
-client/src/context/NotificationContext.jsx, SettingsContext.jsx                                 [NEW]
-```
+### Summary of Build
+- **Toast Notifications** `ToastProvider` context with `useToast()` hook. Displays success, error, warning, info bubbles. 
+- **Notification Dropdown** Bell icon in header pulling unread counts with 30s background polling.
+- **Settings Dashboard** Profile edit, UI Theme Toggle, Alert Preferences and full `Matching Algorithm Tuning` sliders.
+- **In-App Messaging** `MessageModal` letting recruiters send custom emails directly to candidates from the expanded row.
+- **Command Palette** Extraneous `Ctrl+k` interactive global jump panel allowing keyboard-centered navigation.
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -754,8 +733,8 @@ SkillSense/
 | 8 | Exaggeration Detection + Credibility | ✅ Complete | ⭐⭐⭐⭐ |
 | 9 | Ranking, Stability & Comparison | ✅ Complete |
 | 10 | Analytics Dashboard | ✅ Complete |
-| 11 | Notifications, Settings & Communication | ⏳ Next | ⭐⭐⭐ |
-| 12 | Export, Batch Ops & Final Polish | ⏳ Pending | ⭐⭐⭐⭐ |
+| 11 | Notifications, Settings & Communication | ✅ Complete | ⭐⭐⭐ |
+| 12 | Export, Batch Ops & Final Polish | ⏳ Next | ⭐⭐⭐⭐ |
 
 ---
 

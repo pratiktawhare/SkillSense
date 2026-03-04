@@ -282,25 +282,21 @@
 - Observe dynamic updates based on candidate workflow stages reflecting inside Hiring Funnel 
 
 ### Visual Changes
-- � **Stats Cards** indicating totals, rates, and previous period trends 
-- � **Match Distribution** vertically illustrating groupings (0-20, 21-40 ... 80-100) 
+- 📊 **Stats Cards** indicating totals, rates, and previous period trends 
+- 📈 **Match Distribution** vertically illustrating groupings (0-20, 21-40 ... 80-100) 
 - ⏳ **Activity Feed** chronologically displaying recent matches with graphical timeline nodes
 - 🧠 **Missing Skills bar chart** outlining the top technical gap indicators across resumes. 
 
 ---
 
-## ⏳ Part 11: Notifications, Settings & Communication
+## ✅ Part 11: Notifications, Settings & Communication
 
-### What Will Be Built
-- Toast notification system with auto-dismiss
-- Notification center with bell icon and unread count
-- Settings page (profile, matching weights, theme, notification preferences)
-- In-app status messages between recruiter and candidate
-
-### What You'll See
-- 🔔 **Notification bell** with dropdown
-- ⚙️ **Settings page** with weight sliders
-- 💬 **Status messages** on application updates
+### What Was Built
+- Robust notification drop-down bell pulling unread indicators dynamically on interval.
+- Toast UI Context automatically mounting on actions (Profile Updated, Matches Complete).
+- Centralized `Settings` configuration allowing live custom sliding of Ranking Match Algorithm weights.
+- "Message Candidate" inline Email modal communicating statuses on the candidate cards.
+- Comprehensive `Ctrl+K` searchable global navigation modal overlapping system state smoothly. 
 
 ---
 
@@ -358,4 +354,4 @@ http://localhost:5173
 
 ---
 
-*Last updated: Part 10 Complete — Mar 4, 2026*
+*Last updated: Part 11 Complete — Mar 5, 2026*

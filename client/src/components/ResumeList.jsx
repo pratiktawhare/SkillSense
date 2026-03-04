@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { resumeAPI } from '../api';
 import CredibilityBadge from './CredibilityBadge';
 import RedFlagPanel from './RedFlagPanel';
+import MessageModal from './MessageModal';
 
 // Skill tag component for displaying extracted skills
 const SkillTag = ({ skill }) => {
@@ -81,8 +82,27 @@ const CompletenessMeter = ({ score }) => {
 
 // Expanded detail panel for a resume
 const ResumeDetail = ({ resume, onRefresh }) => {
+    const [isMessageOpen, setIsMessageOpen] = useState(false);
+
     return (
         <div className="mt-4 pt-4 border-t border-slate-600 space-y-4 animate-in">
+            {/* Toolbar */}
+            <div className="flex justify-end mb-2">
+                <button
+                    onClick={() => setIsMessageOpen(true)}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-colors"
+                >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    Message Candidate
+                </button>
+
+                {/* Mount Modal */}
+                <MessageModal
+                    isOpen={isMessageOpen}
+                    onClose={() => setIsMessageOpen(false)}
+                    candidateName={resume.candidateName}
+                />
+            </div>
             {/* All Skills - grouped by category */}
             {resume.profile?.skills?.length > 0 && (
                 <div>

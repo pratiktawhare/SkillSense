@@ -1,0 +1,9 @@
+[dotenv@17.2.3] injecting env (4) from .env -- tip: ≡ƒôí add observability to secrets: https://dotenvx.com/ops
+MongoDB Connected: ac-yxkv3oh-shard-00-01.lapewf4.mongodb.net
+ERROR_STACK: TypeError: next is not a function
+    at model.<anonymous> (D:\Projects\SkillSense\server\models\UserSettings.js:34:5)
+    at Kareem.execPre (D:\Projects\SkillSense\server\node_modules\kareem\index.js:63:39)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async model.$__save (D:\Projects\SkillSense\server\node_modules\mongoose\lib\model.js:369:5)
+    at async model.save (D:\Projects\SkillSense\server\node_modules\mongoose\lib\model.js:609:5)
+    at async [eval]:1:187

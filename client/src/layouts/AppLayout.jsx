@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
+import NotificationBell from '../components/NotificationBell';
+import { CommandPalette } from '../components/CommandPalette';
 
 const AppLayout = () => {
     const { logout } = useAuth();
@@ -67,7 +69,18 @@ const AppLayout = () => {
                     <div className="hidden lg:block" />
 
                     {/* Right side */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
+                        <div className="hidden md:flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg mr-2 cursor-pointer border hover:opacity-80 transition-opacity"
+                            style={{ backgroundColor: 'var(--bg-primary)', borderColor: 'var(--border-primary)', color: 'var(--text-secondary)' }}
+                            onClick={() => window.dispatchEvent(new KeyboardEvent('keydown', { ctrlKey: true, key: 'k' }))}
+                            title="Command Palette">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <span>Search...</span>
+                            <kbd className="ml-2 px-1.5 py-0.5 rounded text-[10px] font-bold" style={{ backgroundColor: 'var(--bg-tertiary)', color: 'var(--text-primary)' }}>Ctrl+K</kbd>
+                        </div>
+
+                        <NotificationBell />
+
                         <button
                             onClick={handleLogout}
                             className="btn-secondary text-sm"
@@ -86,6 +99,8 @@ const AppLayout = () => {
                     <Outlet />
                 </main>
             </div>
+
+            <CommandPalette />
         </div>
     );
 };

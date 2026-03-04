@@ -12,6 +12,8 @@ const applicationRoutes = require('./routes/applications');
 const credibilityRoutes = require('./routes/credibility');
 const rankingsRoutes = require('./routes/rankings');
 const metricsRoutes = require('./routes/metrics');
+const notificationRoutes = require('./routes/notifications');
+const settingsRoutes = require('./routes/settings');
 
 const app = express();
 
@@ -36,6 +38,8 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/credibility', credibilityRoutes);
 app.use('/api/rankings', rankingsRoutes);
 app.use('/api/metrics', metricsRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/settings', settingsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
