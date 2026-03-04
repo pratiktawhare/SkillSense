@@ -92,4 +92,14 @@ export const metricsAPI = {
     getJobMetrics: (jobId) => api.get(`/metrics/job/${jobId}`)
 };
 
+// Export API
+export const exportAPI = {
+    jobPDF: (jobId) => api.get(`/export/job/${jobId}/pdf`, { responseType: 'blob' }),
+    jobCSV: (jobId) => api.get(`/export/job/${jobId}/csv`, { responseType: 'blob' }),
+    resumePDF: (resumeId) => api.get(`/export/resume/${resumeId}/pdf`, { responseType: 'blob' }),
+    batchDelete: (ids) => api.post('/export/batch-delete', { ids }),
+    batchStatus: (matchIds, status) => api.post('/export/batch-status', { matchIds, status }),
+    search: (q) => api.get('/export/search', { params: { q } })
+};
+
 export default api;

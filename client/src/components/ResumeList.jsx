@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { resumeAPI } from '../api';
+import { resumeAPI, exportAPI } from '../api';
 import CredibilityBadge from './CredibilityBadge';
 import RedFlagPanel from './RedFlagPanel';
 import MessageModal from './MessageModal';
@@ -87,7 +87,19 @@ const ResumeDetail = ({ resume, onRefresh }) => {
     return (
         <div className="mt-4 pt-4 border-t border-slate-600 space-y-4 animate-in">
             {/* Toolbar */}
-            <div className="flex justify-end mb-2">
+            <div className="flex justify-end gap-2 mb-2">
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+                        const token = localStorage.getItem('token');
+                        window.open(`${API_URL}/export/resume/${resume.id || resume._id}/pdf?token=${token}`, '_blank');
+                    }}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+                >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                    Download PDF
+                </button>
                 <button
                     onClick={() => setIsMessageOpen(true)}
                     className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-colors"
@@ -190,6 +202,7 @@ const ResumeDetail = ({ resume, onRefresh }) => {
 const ResumeList = ({ resumes, onDelete, onRefresh }) => {
     const [generatingIds, setGeneratingIds] = useState(new Set());
     const [expandedId, setExpandedId] = useState(null);
+    const [selectedIds, setSelectedIds] = useState(new Set());
 
     const handleGenerateEmbedding = async (resumeId) => {
         setGeneratingIds(prev => new Set([...prev, resumeId]));
@@ -213,6 +226,34 @@ const ResumeList = ({ resumes, onDelete, onRefresh }) => {
         setExpandedId(expandedId === id ? null : id);
     };
 
+    const toggleSelect = (id) => {
+        setSelectedIds(prev => {
+            const next = new Set(prev);
+            if (next.has(id)) next.delete(id); else next.add(id);
+            return next;
+        });
+    };
+
+    const selectAll = () => setSelectedIds(new Set(resumes.map(r => r.id)));
+    const selectNone = () => setSelectedIds(new Set());
+
+    const handleBulkDelete = async () => {
+        if (selectedIds.size === 0) return;
+        if (!window.confirm(`Delete ${selectedIds.size} selected resume(s)?`)) return;
+        try {
+            await exportAPI.batchDelete(Array.from(selectedIds));
+            setSelectedIds(new Set());
+            if (onRefresh) onRefresh();
+        } catch (error) {
+            console.error('Bulk delete failed:', error);
+            // Fallback: delete one by one
+            for (const id of selectedIds) {
+                try { await onDelete(id); } catch { }
+            }
+            setSelectedIds(new Set());
+        }
+    };
+
     if (resumes.length === 0) {
         return (
             <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700 rounded-2xl p-8 text-center">
@@ -225,9 +266,22 @@ const ResumeList = ({ resumes, onDelete, onRefresh }) => {
 
     return (
         <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-white">
-                Uploaded Resumes ({resumes.length})
-            </h3>
+            <div className="flex items-center justify-between flex-wrap gap-2">
+                <h3 className="text-lg font-semibold text-white">
+                    Uploaded Resumes ({resumes.length})
+                </h3>
+                <div className="flex items-center gap-2">
+                    <button onClick={selectAll} className="text-xs text-slate-400 hover:text-white transition px-2 py-1 rounded bg-slate-700/40">Select All</button>
+                    {selectedIds.size > 0 && (
+                        <>
+                            <button onClick={selectNone} className="text-xs text-slate-400 hover:text-white transition px-2 py-1 rounded bg-slate-700/40">Deselect</button>
+                            <button onClick={handleBulkDelete} className="text-xs text-red-400 hover:text-red-300 transition px-3 py-1 rounded bg-red-500/10 border border-red-500/20">
+                                🗑️ Delete {selectedIds.size}
+                            </button>
+                        </>
+                    )}
+                </div>
+            </div>
 
             <div className="grid gap-4">
                 {resumes.map((resume) => (
@@ -240,42 +294,52 @@ const ResumeList = ({ resumes, onDelete, onRefresh }) => {
                         onClick={() => toggleExpand(resume.id)}
                     >
                         <div className="flex items-start justify-between">
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-3 flex-wrap">
-                                    <h4 className="text-white font-medium truncate">
-                                        {resume.candidateName}
-                                    </h4>
-                                    <EmbeddingBadge
-                                        status={resume.embeddingStatus}
-                                        onGenerate={() => handleGenerateEmbedding(resume.id)}
-                                        isGenerating={generatingIds.has(resume.id)}
-                                    />
-                                    <CredibilityBadge resume={resume} onUpdate={onRefresh} />
-                                </div>
-                                <p className="text-slate-400 text-sm mt-1">{resume.fileName}</p>
-
-                                {/* Experience + Profile Completeness row */}
-                                <div className="flex items-center gap-4 mt-1">
-                                    {resume.profile?.totalYearsExperience > 0 && (
-                                        <p className="text-purple-400 text-sm">
-                                            {resume.profile.totalYearsExperience}+ years experience
-                                        </p>
-                                    )}
-                                    <div className="flex items-center gap-1">
-                                        <span className="text-slate-500 text-xs">Profile:</span>
-                                        <CompletenessMeter score={resume.profileCompleteness || 0} />
+                            <div className="flex-1 min-w-0 flex items-start gap-3">
+                                {/* Batch select checkbox */}
+                                <input
+                                    type="checkbox"
+                                    checked={selectedIds.has(resume.id)}
+                                    onChange={(e) => { e.stopPropagation(); toggleSelect(resume.id); }}
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="mt-1.5 h-4 w-4 rounded accent-purple-500 flex-shrink-0"
+                                />
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-3 flex-wrap">
+                                        <h4 className="text-white font-medium truncate">
+                                            {resume.candidateName}
+                                        </h4>
+                                        <EmbeddingBadge
+                                            status={resume.embeddingStatus}
+                                            onGenerate={() => handleGenerateEmbedding(resume.id)}
+                                            isGenerating={generatingIds.has(resume.id)}
+                                        />
+                                        <CredibilityBadge resume={resume} onUpdate={onRefresh} />
                                     </div>
-                                </div>
+                                    <p className="text-slate-400 text-sm mt-1">{resume.fileName}</p>
 
-                                <p className="text-slate-500 text-xs mt-2">
-                                    {new Date(resume.uploadedAt).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    })}
-                                </p>
+                                    {/* Experience + Profile Completeness row */}
+                                    <div className="flex items-center gap-4 mt-1">
+                                        {resume.profile?.totalYearsExperience > 0 && (
+                                            <p className="text-purple-400 text-sm">
+                                                {resume.profile.totalYearsExperience}+ years experience
+                                            </p>
+                                        )}
+                                        <div className="flex items-center gap-1">
+                                            <span className="text-slate-500 text-xs">Profile:</span>
+                                            <CompletenessMeter score={resume.profileCompleteness || 0} />
+                                        </div>
+                                    </div>
+
+                                    <p className="text-slate-500 text-xs mt-2">
+                                        {new Date(resume.uploadedAt).toLocaleDateString('en-US', {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}
+                                    </p>
+                                </div>
                             </div>
 
                             <div className="flex items-center gap-2 ml-4">

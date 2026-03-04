@@ -21,6 +21,7 @@ import CandidateDashboard from './pages/CandidateDashboard';
 import JobBoard from './pages/JobBoard';
 import ApplicationTracker from './pages/ApplicationTracker';
 import ApplicationPipeline from './pages/ApplicationPipeline';
+import NotFound from './pages/NotFound';
 import './index.css';
 
 // Protected route wrapper
@@ -129,8 +130,8 @@ function App() {
                       <Route path="/candidate/resumes" element={<ResumesPage />} /> {/* Reusing ResumesPage for now, might need adaptation */}
                     </Route>
 
-                    {/* Catch-all */}
-                    <Route path="*" element={<Navigate to="/" />} />
+                    {/* 404 catch-all */}
+                    <Route path="*" element={<NotFound />} />
                   </Routes>
                 </ErrorBoundary>
               </NotificationProvider>

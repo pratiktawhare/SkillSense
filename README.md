@@ -41,11 +41,9 @@ An intelligent recruitment platform that uses semantic AI to match candidates wi
 - 🔔 **Notifications** — Toast alerts and notification center
 - ⚙️ **Settings & Customization** — Modify the algorithm weights, customize profile and toggle System themes across UI.
 - ⚡ **Command Palette** — Ctrl+K global navigation.
-
-### Upcoming 🚧
-- 📥 **Export Reports** — PDF and CSV export for matching results
-- 📦 **Batch Operations** — Bulk embedding, deletion, and multi-file upload
-- 📱 **Mobile Polish** — Fully responsive on all screen sizes
+- 📄 **PDF/CSV Export** — Downloadable job matching reports and candidate profile PDFs
+- 📦 **Batch Operations** — Multi-file upload, bulk delete, and batch status updates
+- 🚫 **404 Page** — Polished not-found page with navigation
 
 ## 🛠️ Tech Stack
 
@@ -280,7 +278,7 @@ JWT_SECRET=your_secret_key
 | 9 | Ranking, Stability & Comparison | ✅ Complete |
 | 10 | Analytics Dashboard | ✅ Complete |
 | 11 | Notifications, Settings & Communication | ✅ Complete |
-| 12 | Export, Batch Ops & Final Polish | ⏳ Next |
+| 12 | Export, Batch Ops & Final Polish | ✅ Complete |
 
 ## 📄 License
 

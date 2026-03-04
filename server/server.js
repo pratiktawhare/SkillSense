@@ -14,6 +14,7 @@ const rankingsRoutes = require('./routes/rankings');
 const metricsRoutes = require('./routes/metrics');
 const notificationRoutes = require('./routes/notifications');
 const settingsRoutes = require('./routes/settings');
+const exportRoutes = require('./routes/exports');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use('/api/rankings', rankingsRoutes);
 app.use('/api/metrics', metricsRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/export', exportRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

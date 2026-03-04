@@ -300,19 +300,31 @@
 
 ---
 
-## ⏳ Part 12: Export, Batch Ops & Final Polish
+## ✅ Part 12: Export, Batch Ops & Final Polish
 
-### What Will Be Built
-- PDF/CSV report generation and download
-- Batch operations (bulk delete, embed, shortlist)
-- Multi-file upload, global search (Ctrl+K)
-- Job management (archive, duplicate, edit)
-- Mobile responsive, keyboard navigation, 404 page
+### What Was Built
+- PDF report generation per job (formatted rankings with candidate scores, skill analysis, status)
+- CSV export for job matching results (spreadsheet download)
+- Individual resume profile PDF download (one-page candidate summary)
+- Batch operations: bulk delete resumes with confirmation, batch status updates
+- Multi-file upload: drag-and-drop multiple PDFs with progress tracking
+- 404 Not Found page with navigation options
+- Enhanced SEO meta tags (OG tags, keywords, theme-color, emoji favicon)
+- Backend export routes with PDF generation (PDFKit), CSV building, and global search API
 
-### What You'll See
-- 📄 **Downloadable PDF/CSV** reports
-- ⌨️ **Command palette** search (Ctrl+K)
-- 📤 **Multi-file drag-and-drop** upload
+### How to Test
+- Go to Matching page, run matching, then click **PDF** or **CSV** buttons to download reports
+- Expand any resume card and click **Download PDF** for individual candidate profile
+- Upload multiple PDFs at once via the enhanced drag-and-drop zone
+- Select resumes via checkboxes, use **Select All** and **Delete N** for batch operations
+- Visit any invalid URL (e.g., `/nonexistent`) to see the 404 page
+
+### Visual Changes
+- 📄 **PDF/CSV export buttons** on matching results page
+- 📥 **Download PDF** button in expanded resume cards
+- 📦 **Multi-file upload** with progress bar and file list management
+- ☑️ **Batch checkboxes** on resume cards with Select All/Deselect/Bulk Delete toolbar
+- 🚫 **404 page** with animated dots and navigation
 
 ---
 
@@ -354,4 +366,4 @@ http://localhost:5173
 
 ---
 
-*Last updated: Part 11 Complete — Mar 5, 2026*
+*Last updated: Part 12 Complete — All 12 Parts Done — Mar 5, 2026*

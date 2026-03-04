@@ -3,6 +3,7 @@ import { jobAPI, matchAPI } from '../api';
 import MatchCard from '../components/MatchCard';
 import RankingTable from '../components/RankingTable';
 import ScoreGauge from '../components/ScoreGauge';
+import ExportButton from '../components/ExportButton';
 
 const MatchingView = ({ onBack }) => {
     const [jobs, setJobs] = useState([]);
@@ -181,6 +182,11 @@ const MatchingView = ({ onBack }) => {
                                 </span>
                             )}
                         </button>
+
+                        {/* Export Buttons */}
+                        {matches.length > 0 && (
+                            <ExportButton jobId={selectedJobId} jobTitle={selectedJob?.title || 'Job'} />
+                        )}
                     </div>
                 </div>
             )}
