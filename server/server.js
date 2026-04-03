@@ -54,6 +54,11 @@ app.use((err, req, res, next) => {
     res.status(500).json({ message: 'Something went wrong!' });
 });
 
+app.get('/', (req, res) => {
+    res.send('Welcome to the Job Application Management System API');
+});
+
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
